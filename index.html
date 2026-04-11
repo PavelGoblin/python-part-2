@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🐍 Python সম্পূর্ণ গাইড — Part 2 | Pavel</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Baloo+Da+2:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0a0a1a; --bg2:#0f0f2a; --card:#13132e; --card2:#1a1a3e;
+    --accent1:#00d4ff; --accent2:#ff6b6b; --accent3:#ffd93d;
+    --accent4:#6bcb77; --accent5:#c77dff; --accent6:#ff9a3c;
+    --text:#e8e8ff; --text2:#a0a0cc;
+    --border:rgba(0,212,255,0.15); --glow1:rgba(0,212,255,0.3);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg);color:var(--text);font-family:'Baloo Da 2','Noto Sans Bengali',sans-serif;overflow-x:hidden;line-height:1.8;}
+
+  /* STARS */
+  #stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+  .star{position:absolute;background:#fff;border-radius:50%;animation:twinkle linear infinite;}
+  @keyframes twinkle{0%,100%{opacity:0.1}50%{opacity:0.8}}
+
+  /* PROGRESS */
+  #progress-bar{position:fixed;top:0;left:0;height:3px;width:0%;background:linear-gradient(90deg,var(--accent4),var(--accent5));z-index:999;transition:width 0.1s;box-shadow:0 0 10px var(--accent4);}
+
+  /* HEADER */
+  header{position:relative;z-index:10;text-align:center;padding:70px 20px 50px;background:radial-gradient(ellipse at top,rgba(107,203,119,0.1) 0%,transparent 70%);border-bottom:1px solid var(--border);}
+  .part-badge{display:inline-block;background:linear-gradient(135deg,var(--accent4),var(--accent1));color:#000;font-weight:800;font-size:0.85rem;padding:6px 20px;border-radius:50px;margin-bottom:20px;letter-spacing:1px;}
+  .main-title{font-size:clamp(2rem,5vw,3.6rem);font-weight:800;background:linear-gradient(135deg,#6bcb77,#00d4ff,#c77dff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2;margin-bottom:12px;}
+  .subtitle{color:var(--text2);font-size:1rem;margin-bottom:6px;}
+  .by-name{display:inline-block;background:linear-gradient(135deg,var(--accent3),var(--accent6));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:700;}
+  .badges{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:22px;}
+  .badge{padding:6px 18px;border-radius:50px;font-size:0.82rem;font-weight:600;border:1px solid;letter-spacing:0.5px;}
+  .b1{border-color:var(--accent4);color:var(--accent4);background:rgba(107,203,119,0.08)}
+  .b2{border-color:var(--accent5);color:var(--accent5);background:rgba(199,125,255,0.08)}
+  .b3{border-color:var(--accent3);color:var(--accent3);background:rgba(255,217,61,0.08)}
+  .b4{border-color:var(--accent2);color:var(--accent2);background:rgba(255,107,107,0.08)}
+
+  /* NAV */
+  #toc{position:relative;z-index:10;max-width:960px;margin:35px auto;padding:0 20px;}
+  .toc-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;backdrop-filter:blur(10px);}
+  .toc-title{font-size:1.3rem;font-weight:800;color:var(--accent4);margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+  .toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:9px;}
+  .toc-item{display:flex;align-items:center;gap:8px;padding:9px 13px;background:var(--card2);border-radius:11px;text-decoration:none;color:var(--text2);font-size:0.86rem;border:1px solid transparent;transition:all 0.3s;}
+  .toc-item:hover{color:var(--accent4);border-color:var(--accent4);background:rgba(107,203,119,0.06);transform:translateX(4px);}
+  .toc-num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;flex-shrink:0;}
+
+  /* MAIN */
+  main{position:relative;z-index:10;max-width:960px;margin:0 auto;padding:0 20px 80px;}
+
+  /* SECTION */
+  .section{margin-bottom:55px;animation:fadeUp 0.6s ease both;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+  .section-card{background:var(--card);border-radius:24px;border:1px solid var(--border);overflow:hidden;transition:transform 0.3s,box-shadow 0.3s;}
+  .section-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.4);}
+
+  .section-header{padding:22px 30px;display:flex;align-items:center;gap:15px;position:relative;overflow:hidden;}
+  .section-header::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;opacity:0.07;}
+  .sh-green::before{background:linear-gradient(135deg,#6bcb77,#00b894);}
+  .sh-blue::before{background:linear-gradient(135deg,#00d4ff,#0077ff);}
+  .sh-purple::before{background:linear-gradient(135deg,#c77dff,#7b2fff);}
+  .sh-red::before{background:linear-gradient(135deg,#ff6b6b,#ff0066);}
+  .sh-yellow::before{background:linear-gradient(135deg,#ffd93d,#ff9a3c);}
+  .sh-orange::before{background:linear-gradient(135deg,#ff9a3c,#ff6b6b);}
+  .sh-teal::before{background:linear-gradient(135deg,#00d4ff,#00b894);}
+  .sh-pink::before{background:linear-gradient(135deg,#ff6b6b,#c77dff);}
+  .sh-indigo::before{background:linear-gradient(135deg,#7b2fff,#00d4ff);}
+  .sh-gold::before{background:linear-gradient(135deg,#ffd93d,#c77dff);}
+  .sh-crimson::before{background:linear-gradient(135deg,#ff6b6b,#ff9a3c);}
+
+  .section-icon{font-size:2.2rem;filter:drop-shadow(0 0 10px currentColor);position:relative;z-index:1;flex-shrink:0;}
+  .section-title{font-size:1.45rem;font-weight:800;position:relative;z-index:1;}
+  .section-num{margin-left:auto;font-size:3rem;font-weight:900;opacity:0.08;position:relative;z-index:1;font-family:'Fira Code',monospace;}
+
+  .section-body{padding:28px 30px;}
+
+  .explain{background:var(--card2);border-radius:14px;padding:18px 22px;margin-bottom:18px;border-left:4px solid;font-size:0.96rem;line-height:1.9;}
+  .ex-blue{border-color:var(--accent1);} .ex-red{border-color:var(--accent2);} .ex-yellow{border-color:var(--accent3);}
+  .ex-green{border-color:var(--accent4);} .ex-purple{border-color:var(--accent5);} .ex-orange{border-color:var(--accent6);}
+
+  .info-box{border-radius:14px;padding:15px 20px;margin:14px 0;display:flex;gap:12px;align-items:flex-start;font-size:0.9rem;}
+  .info-tip{background:rgba(107,203,119,0.1);border:1px solid rgba(107,203,119,0.25);}
+  .info-note{background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);}
+  .info-warn{background:rgba(255,217,61,0.08);border:1px solid rgba(255,217,61,0.2);}
+  .info-icon{font-size:1.3rem;flex-shrink:0;margin-top:2px;}
+
+  .code-wrap{background:#060614;border-radius:16px;border:1px solid rgba(0,212,255,0.1);overflow:hidden;margin:16px 0;box-shadow:0 8px 32px rgba(0,0,0,0.5);transition:box-shadow 0.3s;}
+  .code-wrap:hover{box-shadow:0 12px 40px rgba(107,203,119,0.1);}
+  .code-header{padding:10px 18px;background:rgba(255,255,255,0.04);border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;}
+  .code-dots{display:flex;gap:6px;}
+  .code-dot{width:12px;height:12px;border-radius:50%;}
+  .cd1{background:#ff5f57;} .cd2{background:#ffbd2e;} .cd3{background:#28c840;}
+  .code-lang{color:var(--accent4);font-size:0.78rem;font-weight:600;font-family:'Fira Code',monospace;letter-spacing:1px;}
+  .copy-btn{background:rgba(107,203,119,0.1);color:var(--accent4);border:1px solid rgba(107,203,119,0.3);border-radius:8px;padding:4px 12px;font-size:0.75rem;cursor:pointer;transition:all 0.2s;font-family:'Fira Code',monospace;}
+  .copy-btn:hover{background:rgba(107,203,119,0.2);}
+  .copy-btn.copied{color:var(--accent1);border-color:var(--accent1);}
+
+  pre{padding:20px 22px;overflow-x:auto;font-family:'Fira Code',monospace;font-size:0.87rem;line-height:2;color:#cdd6f4;}
+  .kw{color:#cba6f7;font-weight:600;} .fn{color:#89dceb;} .st{color:#a6e3a1;} .nm{color:#fab387;}
+  .cm{color:#585b70;font-style:italic;} .op{color:#89b4fa;} .bi{color:#f38ba8;}
+  .va{color:#cdd6f4;} .cl{color:#f9e2af;} .pn{color:#cdd6f4;} .dec{color:#ffd93d;}
+
+  .output-box{background:#010108;border-radius:12px;border:1px solid rgba(107,203,119,0.25);padding:14px 20px;margin-top:-6px;margin-bottom:16px;}
+  .output-label{color:var(--accent4);font-size:0.75rem;font-family:'Fira Code',monospace;margin-bottom:8px;font-weight:600;letter-spacing:1px;}
+  .output-text{font-family:'Fira Code',monospace;font-size:0.84rem;color:#a6e3a1;line-height:1.8;}
+
+  .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:13px;margin:14px 0;}
+  .mini-card{background:var(--card2);border-radius:14px;padding:16px;border:1px solid rgba(255,255,255,0.06);transition:transform 0.3s,border-color 0.3s;text-align:center;}
+  .mini-card:hover{transform:translateY(-4px) scale(1.02);border-color:rgba(107,203,119,0.3);}
+  .mc-icon{font-size:2rem;margin-bottom:8px;display:block;}
+  .mc-title{font-size:0.9rem;font-weight:700;margin-bottom:4px;}
+  .mc-desc{font-size:0.77rem;color:var(--text2);}
+
+  .table-wrap{overflow-x:auto;margin:14px 0;}
+  table{width:100%;border-collapse:collapse;background:var(--card2);border-radius:14px;overflow:hidden;font-size:0.87rem;}
+  th{background:rgba(107,203,119,0.1);color:var(--accent4);padding:12px 16px;text-align:left;font-weight:700;border-bottom:1px solid var(--border);}
+  td{padding:11px 16px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--text2);}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(255,255,255,0.02);}
+  .td-code{font-family:'Fira Code',monospace;color:var(--accent3);font-size:0.82rem;}
+  .td-out{font-family:'Fira Code',monospace;color:var(--accent4);font-size:0.82rem;}
+
+  .hl{display:inline-block;padding:2px 8px;border-radius:6px;font-family:'Fira Code',monospace;font-size:0.84em;font-weight:500;}
+  .hl-b{background:rgba(0,212,255,0.12);color:var(--accent1);}
+  .hl-r{background:rgba(255,107,107,0.12);color:var(--accent2);}
+  .hl-y{background:rgba(255,217,61,0.12);color:var(--accent3);}
+  .hl-g{background:rgba(107,203,119,0.12);color:var(--accent4);}
+  .hl-p{background:rgba(199,125,255,0.12);color:var(--accent5);}
+  .hl-o{background:rgba(255,154,60,0.12);color:var(--accent6);}
+
+  .sub-heading{font-size:1.03rem;font-weight:700;margin:22px 0 11px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:8px;}
+
+  .steps{margin:14px 0;}
+  .step{display:flex;gap:15px;margin-bottom:15px;padding:15px;background:var(--card2);border-radius:14px;border:1px solid rgba(255,255,255,0.05);}
+  .step-num{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.88rem;flex-shrink:0;margin-top:2px;}
+  .step-body{flex:1;}
+  .step-title{font-weight:700;margin-bottom:4px;font-size:0.95rem;}
+  .step-desc{font-size:0.86rem;color:var(--text2);}
+
+  .divider{text-align:center;color:var(--text2);font-size:0.8rem;margin:28px 0;display:flex;align-items:center;gap:12px;}
+  .divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.07);}
+
+  .tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:0.78rem;font-weight:600;margin:3px;}
+
+  /* two-col layout */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+  @media(max-width:620px){.two-col{grid-template-columns:1fr;}}
+
+  .compare-box{background:var(--card2);border-radius:14px;padding:16px 18px;border:1px solid rgba(255,255,255,0.06);}
+  .compare-label{font-size:0.78rem;font-weight:700;letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:6px;}
+
+  /* scroll top */
+  #scroll-top{position:fixed;bottom:30px;right:30px;width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--accent4),var(--accent1));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:#000;font-weight:900;box-shadow:0 8px 25px rgba(107,203,119,0.4);opacity:0;transform:translateY(20px);transition:all 0.3s;z-index:999;}
+  #scroll-top.show{opacity:1;transform:translateY(0);}
+  #scroll-top:hover{transform:translateY(-4px) scale(1.1);}
+
+  footer{position:relative;z-index:10;text-align:center;padding:40px 20px;border-top:1px solid var(--border);color:var(--text2);font-size:0.88rem;}
+  footer strong{color:var(--accent4);}
+
+  /* practice box */
+  .practice{background:linear-gradient(135deg,rgba(107,203,119,0.06),rgba(0,212,255,0.06));border:1px solid rgba(107,203,119,0.2);border-radius:16px;padding:20px;margin:18px 0;}
+  .practice-title{color:var(--accent4);font-weight:700;font-size:0.95rem;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+  .practice ol{padding-left:20px;color:var(--text2);font-size:0.9rem;line-height:2.2;}
+  .practice ol li::marker{color:var(--accent4);}
+
+  /* concept diagram */
+  .concept-row{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0;align-items:stretch;}
+  .concept-box{flex:1;min-width:150px;background:var(--card2);border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.07);text-align:center;}
+  .concept-arrow{display:flex;align-items:center;color:var(--text2);font-size:1.4rem;padding:0 4px;}
+
+  @media(max-width:600px){
+    .section-header{padding:16px 18px;} .section-body{padding:18px 16px;}
+    pre{font-size:0.76rem;} .toc-grid{grid-template-columns:1fr 1fr;}
+    .card-grid{grid-template-columns:1fr 1fr;}
+  }
+</style>
+</head>
+<body>
+<div id="progress-bar"></div>
+<div id="stars"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="part-badge">📘 PART 2 — Advanced Topics</div>
+  <h1 class="main-title">🐍 Python সম্পূর্ণ গাইড</h1>
+  <p class="subtitle">উন্নত বিষয়সমূহ — সম্পূর্ণ বাংলায়</p>
+  <p class="subtitle">তৈরি করেছেন: <span class="by-name">Pavel  · CSEian and Python Enthusiast and ai Developer</span></p>
+  <div class="badges">
+    <span class="badge b1">🔗 Inheritance & OOP</span>
+    <span class="badge b2">⚡ Decorators</span>
+    <span class="badge b3">🔄 Generators</span>
+    <span class="badge b4">🎯 Practice Problems</span>
+  </div>
+</header>
+
+<!-- TOC -->
+<nav id="toc">
+  <div class="toc-box">
+    <div class="toc-title">📋 Part 2 সূচিপত্র</div>
+    <div class="toc-grid">
+      <a href="#s21" class="toc-item"><span class="toc-num" style="background:rgba(107,203,119,0.2);color:var(--accent4)">২১</span>Inheritance (উত্তরাধিকার)</a>
+      <a href="#s22" class="toc-item"><span class="toc-num" style="background:rgba(0,212,255,0.2);color:var(--accent1)">২২</span>Polymorphism</a>
+      <a href="#s23" class="toc-item"><span class="toc-num" style="background:rgba(199,125,255,0.2);color:var(--accent5)">২৩</span>Encapsulation</a>
+      <a href="#s24" class="toc-item"><span class="toc-num" style="background:rgba(255,217,61,0.2);color:var(--accent3)">২৪</span>Decorators</a>
+      <a href="#s25" class="toc-item"><span class="toc-num" style="background:rgba(255,107,107,0.2);color:var(--accent2)">২৫</span>Generators</a>
+      <a href="#s26" class="toc-item"><span class="toc-num" style="background:rgba(255,154,60,0.2);color:var(--accent6)">২৬</span>Recursion</a>
+      <a href="#s27" class="toc-item"><span class="toc-num" style="background:rgba(0,212,255,0.2);color:var(--accent1)">২৭</span>Map, Filter, Reduce</a>
+      <a href="#s28" class="toc-item"><span class="toc-num" style="background:rgba(107,203,119,0.2);color:var(--accent4)">২৮</span>Regular Expressions</a>
+      <a href="#s29" class="toc-item"><span class="toc-num" style="background:rgba(199,125,255,0.2);color:var(--accent5)">২৯</span>*args & **kwargs</a>
+      <a href="#s30" class="toc-item"><span class="toc-num" style="background:rgba(255,217,61,0.2);color:var(--accent3)">৩০</span>Iterator & Iterable</a>
+      <a href="#s31" class="toc-item"><span class="toc-num" style="background:rgba(255,107,107,0.2);color:var(--accent2)">৩১</span>Context Manager</a>
+      <a href="#s32" class="toc-item"><span class="toc-num" style="background:rgba(255,154,60,0.2);color:var(--accent6)">৩২</span>Scope & Closure</a>
+      <a href="#s33" class="toc-item"><span class="toc-num" style="background:rgba(0,212,255,0.2);color:var(--accent1)">৩৩</span>Type Hints</a>
+      <a href="#s34" class="toc-item"><span class="toc-num" style="background:rgba(107,203,119,0.2);color:var(--accent4)">৩৪</span>JSON Data</a>
+      <a href="#s35" class="toc-item"><span class="toc-num" style="background:rgba(199,125,255,0.2);color:var(--accent5)">৩৫</span>NumPy Basics</a>
+      <a href="#s36" class="toc-item"><span class="toc-num" style="background:rgba(255,217,61,0.2);color:var(--accent3)">৩৬</span>Pandas Basics</a>
+      <a href="#s37" class="toc-item"><span class="toc-num" style="background:rgba(255,107,107,0.2);color:var(--accent2)">৩৭</span>সম্পূর্ণ Projects</a>
+      <a href="#s38" class="toc-item"><span class="toc-num" style="background:rgba(255,154,60,0.2);color:var(--accent6)">৩৮</span>Practice Problems</a>
+      <a href="#s39" class="toc-item"><span class="toc-num" style="background:rgba(0,212,255,0.2);color:var(--accent1)">৩৯</span>Quick Reference</a>
+      <a href="#s40" class="toc-item"><span class="toc-num" style="background:rgba(107,203,119,0.2);color:var(--accent4)">৪০</span>Cheat Sheet</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+
+<!-- ===== SECTION 21: INHERITANCE ===== -->
+<div class="section" id="s21">
+  <div class="section-card">
+    <div class="section-header sh-green">
+      <span class="section-icon">🧬</span>
+      <div>
+        <div class="section-title" style="color:var(--accent4)">Inheritance (উত্তরাধিকার)</div>
+        <div style="color:var(--text2);font-size:0.84rem">Parent থেকে Child-এ সম্পত্তি পাওয়া</div>
+      </div>
+      <div class="section-num">21</div>
+    </div>
+    <div class="section-body">
+      <div class="explain ex-green">
+        <strong>Inheritance</strong> মানে হলো বাবার সম্পত্তি ছেলে পায় — ঠিক একইভাবে Python-এ একটি <strong>Parent Class</strong>-এর সব কিছু <strong>Child Class</strong> পায়।
+        Child Class-এ নতুন কিছু যোগ করা যায় এবং পুরনো কিছু পরিবর্তনও করা যায়।
+        এতে code <strong>পুনরায় ব্যবহার</strong> করা সহজ হয়।
+      </div>
+
+      <div class="concept-row">
+        <div class="concept-box" style="border-color:rgba(107,203,119,0.3)">
+          <div style="font-size:1.8rem">👨</div>
+          <div style="color:var(--accent4);font-weight:700;margin:6px 0">Parent Class</div>
+          <div style="font-size:0.8rem;color:var(--text2)">Animal<br>(name, sound, eat)</div>
+        </div>
+        <div class="concept-arrow">→</div>
+        <div style="flex:1;min-width:160px;display:flex;flex-direction:column;gap:8px">
+          <div class="concept-box" style="border-color:rgba(0,212,255,0.3)">
+            <div style="font-size:1.4rem">🐕</div>
+            <div style="color:var(--accent1);font-weight:700;font-size:0.9rem">Dog (Child)</div>
+            <div style="font-size:0.78rem;color:var(--text2)">+ fetch()</div>
+          </div>
+          <div class="concept-box" style="border-color:rgba(199,125,255,0.3)">
+            <div style="font-size:1.4rem">🐱</div>
+            <div style="color:var(--accent5);font-weight:700;font-size:0.9rem">Cat (Child)</div>
+            <div style="font-size:0.78rem;color:var(--text2)">+ purr()</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot cd1"></div><div class="code-dot cd2"></div><div class="code-dot cd3"></div></div>
+          <span class="code-lang">PYTHON — Inheritance</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="cm"># Parent Class (Base Class)</span>
+<span class="kw">class</span> <span class="cl">Animal</span><span class="pn">:</span>
+    <span class="kw">def</span> <span class="fn">__init__</span><span class="pn">(</span><span class="va">self</span><span class="pn">,</span> <span class="va">name</span><span class="pn">,</span> <span class="va">sound</span><span class="pn">):</span>
+        <span class="va">self</span><span class="pn">.</span><span class="va">name</span> <span class="op">=</span> <span class="va">name</span>
+        <span class="va">self</span><span class="pn">.</span><span class="va">sound</span> <span class="op">=</span> <span class="va">sound</span>
+
+    <span class="kw">def</span> <span class="fn">speak</span><span class="pn">(</span><span class="va">self</span><span class="pn">):</span>
+        <span class="fn">print</span><span class="pn">(</span><span class="st">f"{self.name} বলে: {self.sound}!"</span><span class="pn">)</span>
+
+    <span class="kw">def</span> <span class="fn">eat</span><span class="pn">(</span><span class="va">self</span><span class="pn">):</span>
+        <span class="fn">print</span><span class="pn">(</span><span class="st">f"{self.name} খাচ্ছে..."</span><span class="pn">)</span>
+
+<span class="cm"># Child Class — Animal থেকে inherit করছে</span>
+<span class="kw">class</span> <span class="cl">Dog</span><span class="pn">(</span><span class="cl">Animal</span><span class="pn">):</span>       <span class="cm"># (Animal) লিখলেই inherit হয়</span>
+    <span class="kw">def</span> <span class="fn">__init__</span><span class="pn">(</span><span class="va">self</span><span class="pn">,</span> <span class="va">name</span><span class="pn">,</span> <span class="va">breed</span><span class="pn">):</span>
+        <span class="bi">super</span><span class="pn">().</span><span class="fn">__init__</span><span class="pn">(</span><span class="va">name</span><span class="pn">,</span> <span class="st">"ঘেউ ঘেউ"</span><span class="pn">)</span>  <span class="cm"># Parent-এর __init__ call</span>
+        <span class="va">self</span><span class="pn">.</span><span class="va">breed</span> <span class="op">=</span> <span class="va">breed</span>
+
+    <span class="kw">def</span> <span class="fn">fetch</span><span class="pn">(</span><span class="va">self</span><span class="pn">):</span>               <span class="cm"># Dog-এর নিজস্ব method</span>
+        <span class="fn">print</span><span class="pn">(</span><span class="st">f"{self.name} বল ধরে আনল!"</span><span class="pn">)</span>
+
+    <span class="kw">def</span> <span class="fn">info</span><span class="pn">(</span><span class="va">self</span><span class="pn">):</span>
+        <span class="fn">print</span><span class="pn">(</span><span class="st">f"নাম: {self.name}, জাত: {self.breed}"</span><span class="pn">)</span>
+
+<span class="kw">class</span> <span class="cl">Cat</span><span class="pn">(</span><span class="cl">Animal</span><span class="pn">):</span>
+    <span class="kw">def</span> <span class="fn">__init__</span><span class="pn">(</span><span class="va">self</span><span class="pn">,</span> <span class="va">name</span><span class="pn">,</span> <span class="va">color</span><span class="pn">):</span>
+        <span class="bi">super</span><span class="pn">().</span><span class="fn">__init__</span><span class="pn">(</span><span class="va">name</span><span class="pn">,</span> <span class="st">"মিউ মিউ"</span><span class="pn">)</span>
+        <span class="va">self</span><span class="pn">.</span><span class="va">color</span> <span class="op">=</span> <span class="va">color</span>
+
+    <span class="kw">def</span> <span class="fn">purr</span><span class="pn">(</span><span class="va">self</span><span class="pn">):</span>
+        <span class="fn">print</span><span class="pn">(</span><span class="st">f"{self.name} গুরগুর করছে... 😸"</span><span class="pn">)</span>
+
+<span class="cm"># Object তৈরি ও ব্যবহার</span>
+<span class="va">dog</span> <span class="op">=</span> <span class="cl">Dog</span><span class="pn">(</span><span class="st">"রাজা"</span><span class="pn">,</span> <span class="st">"Labrador"</span><span class="pn">)</span>
+<span class="va">cat</span> <span class="op">=</span> <span class="cl">Cat</span><span class="pn">(</span><span class="st">"মিমি"</span><span class="pn">,</span> <span class="st">"কালো"</span><span class="pn">)</span>
+
+<span class="va">dog</span><span class="pn">.</span><span class="fn">speak</span><span class="pn">()</span>     <span class="cm"># Animal থেকে পেয়েছে</span>
+<span class="va">dog</span><span class="pn">.</span><span class="fn">eat</span><span class="pn">()</span>       <span class="cm"># Animal থেকে পেয়েছে</span>
+<span class="va">dog</span><span class="pn">.</span><span class="fn">fetch</span><span class="pn">()</span>     <span class="cm"># Dog-এর নিজস্ব</span>
+<span class="va">dog</span><span class="pn">.</span><span class="fn">info</span><span class="pn">()</span>
+
+<span class="va">cat</span><span class="pn">.</span><span class="fn">speak</span><span class="pn">()</span>
+<span class="va">cat</span><span class="pn">.</span><span class="fn">purr</span><span class="pn">()</span>
+
+<span class="cm"># isinstance() — কোন Class-এর object তা দেখা</span>
+<span class="fn">print</span><span class="pn">(</span><span class="bi">isinstance</span><span class="pn">(</span><span class="va">dog</span><span class="pn">,</span> <span class="cl">Dog</span><span class="pn">))</span>     <span class="cm"># True</span>
+<span class="fn">print</span><span class="pn">(</span><span class="bi">isinstance</span><span class="pn">(</span><span class="va">dog</span><span class="pn">,</span> <span class="cl">Animal</span><span class="pn">))</span>  <span class="cm"># True (Dog, Animal-এর child)</span>
+<span class="fn">print</span><span class="pn">(</span><span class="bi">isinstance</span><span class="pn">(</span><span class="va">cat</span><span class="pn">,</span> <span class="cl">Dog</span><span class="pn">))</span>     <span class="cm"># False</span></pre>
+      </div>
+      <div class="output-box">
+        <div class="output-label">▶ OUTPUT</div>
+        <div class="output-text">রাজা বলে: ঘেউ ঘেউ!
+রাজা খাচ্ছে...
+রাজা বল ধরে আনল!
+নাম: রাজা, জাত: Labrador
+মিমি বলে: মিউ মিউ!
+মিমি গুরগুর করছে... 😸
+True
+True
+False</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 22: POLYMORPHISM ===== -->
+<div class="section" id="s22">
+  <div class="section-card">
+    <div class="section-header sh-blue">
+      <span class="section-icon">🦋</span>
+      <div>
+        <div class="section-title" style="color:var(--accent1)">Polymorphism (বহুরূপিতা)</div>
+        <div style="color:var(--text2);font-size:0.84rem">একই নামের method, আলাদা কাজ</div>
+      </div>
+      <div class="section-num">22</div>
+    </div>
+    <div class="section-body">
+      <div class="explain ex-blue">
+        <strong>Polymorphism</strong> মানে "অনেক রূপ"। একই method-এর নাম বিভিন্ন class-এ আলাদা কাজ করে।
+        যেমন <span class="hl hl-b">speak()</span> method — কুকুর ডাকলে "ঘেউ", বিড়াল ডাকলে "মিউ"। নাম এক, কাজ আলাদা!
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot cd1"></div><div class="code-dot cd2"></div><div class="code-dot cd3"></div></div>
+          <span class="code-lang">PYTHON — Polymorphism</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="cm"># Method Overriding — Parent-এর method পরিবর্তন করা</span>
+<span class="kw">class</span> <span class="cl">Shape</span><span class="pn">:</span>
+    <span class="kw">def</span> <span class="fn">area</span><span class="pn">(</span><span class="va">self</span><span class="pn">):</span>
+        <span class="kw">return</span> <span class="nm">0</span>
+
+    <span class="kw">def</span> <span class="fn">describe</span><span class="pn">(</span><span class="va">self</span><span class="pn">):</span>
+        <span class="fn">print</span><span class="pn">(</span><span class="st">f"এটি একটি Shape, ক্ষেত্রফল = {self.area()}"</span><span class="pn">)</span>
+
+<span class="kw">class</span> <span class="cl">Circle</span><span class="pn">(</span><span class="cl">Shape</span><span class="pn">):</span>
+    <span class="kw">def</span> <span class="fn">__init__</span><span class="pn">(</span><span class="va">self</span><span class="pn">,</span> <span class="va">radius</span><span class="pn">):</span>
+        <span class="va">self</span><span class="pn">.</span><span class="va">radius</span> <span class="op">=</span> <span class="va">radius</span>
+
+    <span class="kw">def</span> <span class="fn">area</span><span class="pn">(</span><span class="va">self</span><span class="pn">):</span>              <span class="cm"># Override করা হলো</span>
+        <span class="kw">return</span> <span class="nm">3.14</span> <span class="op">*</span> <span class="va">self</span><span class="pn">.</span><span class="va">radius</span> <span class="op">**</span> <span class="nm">2</span>
+
+<span class="kw">class</span> <span class="cl">Rectangle</span><span class="pn">(</span><span class="cl">Shape</span><span class="pn">):</span>
+    <span class="kw">def</span> <span class="fn">__init__</span><span class="pn">(</span><span class="va">self</span><span class="pn">,</span> <span class="va">width</span><span class="pn">,</span> <span class="va">height</span><span class="pn">):</span>
+        <span class="va">self</span><span class="pn">.</span><span class="va">width</span> <span class="op">=</span> <span class="va">width</span>
+        <span class="va">self</span><span class="pn">.</span><span class="va">height</span> <span class="op">=</span> <span class="va">height</span>
+
+    <span class="kw">def</span> <span class="fn">area</span><span class="pn">(</span><span class="va">self</span><span class="pn">):</span>              <span class="cm"># Override করা হলো</span>
+        <span class="kw">return</span> <span class="va">self</span><span class="pn">.</span><span class="va">width</span> <span class="op">*</span> <span class="va">self</span><span class="pn">.</span><span class="va">height</span>
+
+<span class="kw">class</span> <span class="cl">Triangle</span><span class="pn">(</span><span class="cl">Shape</span><span class="pn">):</span>
+    <span class="kw">def</span> <span class="fn">__init__</span><span class="pn">(</span><span class="va">self</span><span class="pn">,</span> <span class="va">base</span><span class="pn">,</span> <span class="va">height</span><span class="pn">):</span>
+        <span class="va">self</span><span class="pn">.</span><span class="va">base</span> <span class="op">=</span> <span class="va">base</span>
+        <span class="va">self</span><span class="pn">.</span><span class="va">height</span> <span class="op">=</span> <span class="va">height</span>
+
+    <span class="kw">def</span> <span class="fn">area</span><span class="pn">(</span><span class="va">self</span><span class="pn">):</span>
+        <span class="kw">return</span> <span class="nm">0.5</span> <span class="op">*</span> <span class="va">self</span><span class="pn">.</span><span class="va">base</span> <span class="op">*</span> <span class="va">self</span><span class="pn">.</span><span class="va">height</span>
+
+<span class="cm"># Polymorphism — একই loop, আলাদা আলাদা area()</span>
+<span class="va">shapes</span> <span class="op">=</span> <span class="pn">[</span><span class="cl">Circle</span><span class="pn">(</span><span class="nm">5</span><span class="pn">),</span> <span class="cl">Rectangle</span><span class="pn">(</span><span class="nm">4</span><span class="pn">,</span><span class="nm">6</span><span class="pn">),</span> <span class="cl">Triangle</span><span class="pn">(</span><span class="nm">3</span><span class="pn">,</span><span class="nm">8</span><span class="pn">)]</span>
+
+<span class="kw">for</span> <span class="va">shape</span> <span class="kw">in</span> <span class="va">shapes</span><span class="pn">:</span>
+    <span class="va">shape</span><span class="pn">.</span><span class="fn">describe</span><span class="pn">()</span>    <span class="cm"># প্রতিটির area() আলাদাভাবে কাজ করে</span>
+
+<span class="cm"># Operator Overloading — + দিয়ে custom object যোগ করা</span>
+<span class="kw">class</span> <span class="cl">Vector</span><span class="pn">:</span>
+    <span class="kw">def</span> <span class="fn">__init__</span><span class="pn">(</span><span class="va">self</span><span class="pn">,</span> <span class="va">x</span><span class="pn">,</span> <span class="va">y</span><span class="pn">):</span>
+        <span class="va">self</span><span class="pn">.</span><span class="va">x</span><span class="pn">,</span> <span class="va">self</span><span class="pn">.</span><span class="va">y</span> <span class="op">=</span> <span class="va">x</span><span class="pn">,</span> <span class="va">y</span>
+
+    <span class="kw">def</span> <span class="fn">__add__</span><span class="pn">(</span><span class="va">self</span><span class="pn">,</span> <span class="va">other</span><span class="pn">):</span>   <span class="cm"># + operator define</span>
+        <span class="kw">return</span> <span class="cl">Vector</span><span class="pn">(</span><span class="va">self</span><span class="pn">.</span><span class="va">x</span><span class="op">+</span><span class="va">other</span><span class="pn">.</span><span class="va">x</span><span class="pn">,</span> <span class="va">self</span><span class="pn">.</span><span class="va">y</span><span class="op">+</span><span class="va">other</span><span class="pn">.</span><span class="va">y</span><span class="pn">)</span>
+
+    <span class="kw">def</span> <span class="fn">__str__</span><span class="pn">(</span><span class="va">self</span><span class="pn">):</span>           <span class="cm"># print() করলে কী দেখাবে</span>
+        <span class="kw">return</span> <span class="st">f"Vector({self.x}, {self.y})"</span>
+
+<span class="va">v1</span> <span class="op">=</span> <span class="cl">Vector</span><span class="pn">(</span><span class="nm">2</span><span class="pn">,</span> <span class="nm">3</span><span class="pn">)</span>
+<span class="va">v2</span> <span class="op">=</span> <span class="cl">Vector</span><span class="pn">(</span><span class="nm">4</span><span class="pn">,</span> <span class="nm">1</span><span class="pn">)</span>
+<span class="va">v3</span> <span class="op">=</span> <span class="va">v1</span> <span class="op">+</span> <span class="va">v2</span>       <span class="cm"># __add__ call হয়</span>
+<span class="fn">print</span><span class="pn">(</span><span class="va">v3</span><span class="pn">)</span>           <span class="cm"># Vector(6, 4)</span></pre>
+      </div>
+      <div class="output-box">
+        <div class="output-label">▶ OUTPUT</div>
+        <div class="output-text">এটি একটি Shape, ক্ষেত্রফল = 78.5
+এটি একটি Shape, ক্ষেত্রফল = 24
+এটি একটি Shape, ক্ষেত্রফল = 12.0
+Vector(6, 4)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 23: ENCAPSULATION ===== -->
+<div class="section" id="s23">
+  <div class="section-card">
+    <div class="section-header sh-purple">
+      <span class="section-icon">🔐</span>
+      <div>
+        <div class="section-title" style="color:var(--accent5)">Encapsulation (আবরণ)</div>
+        <div style="color:var(--text2);font-size:0.84rem">তথ্য লুকিয়ে রাখা — Private & Public</div>
+      </div>
+      <div class="section-num">23</div>
+    </div>
+    <div class="section-body">
+      <div class="explain ex-purple">
+        <strong>Encapsulation</strong> মানে data লুকিয়ে রাখা। যেমন ATM-এর ভেতরের কাজ আমরা দেখি না, শুধু বাইরের button ব্যবহার করি।
+        Python-এ <span class="hl hl-p">_single_underscore</span> = protected, <span class="hl hl-r">__double_underscore</span> = private।
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot cd1"></div><div class="code-dot cd2"></div><div class="code-dot cd3"></div></div>
+          <span class="code-lang">PYTHON — Encapsulation</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="kw">class</span> <span class="cl">BankAccount</span><span class="pn">:</span>
+    <span class="kw">def</span> <span class="fn">__init__</span><span class="pn">(</span><span class="va">self</span><span class="pn">,</span> <span class="va">owner</span><span class="pn">,</span> <span class="va">balance</span><span class="pn">):</span>
+        <span class="va">self</span><span class="pn">.</span><span class="va">owner</span> <span class="op">=</span> <span class="va">owner</span>          <span class="cm"># public</span>
+        <span class="va">self</span><span class="pn">.</span><span class="va">_bank_name</span> <span class="op">=</span> <span class="st">"BOU Bank"</span>  <span class="cm"># protected (_)</span>
+        <span class="va">self</span><span class="pn">.</span><span class="va">__balance</span> <span class="op">=</span> <span class="va">balance</span>    <span class="cm"># private (__)</span>
+
+    <span class="cm"># Getter — private data পড়ার পদ্ধতি</span>
+    <span class="kw">def</span> <span class="fn">get_balance</span><span class="pn">(</span><span class="va">self</span><span class="pn">):</span>
+        <span class="kw">return</span> <span class="st">f"ব্যালেন্স: {self.__balance} টাকা"</span>
+
+    <span class="cm"># Setter — private data পরিবর্তনের পদ্ধতি</span>
+    <span class="kw">def</span> <span class="fn">deposit</span><span class="pn">(</span><span class="va">self</span><span class="pn">,</span> <span class="va">amount</span><span class="pn">):</span>
+        <span class="kw">if</span> <span class="va">amount</span> <span class="op">&gt;</span> <span class="nm">0</span><span class="pn">:</span>
+            <span class="va">self</span><span class="pn">.</span><span class="va">__balance</span> <span class="op">+=</span> <span class="va">amount</span>
+            <span class="fn">print</span><span class="pn">(</span><span class="st">f"{amount} টাকা জমা হয়েছে"</span><span class="pn">)</span>
+        <span class="kw">else</span><span class="pn">:</span>
+            <span class="fn">print</span><span class="pn">(</span><span class="st">"পরিমাণ ০ এর বেশি হতে হবে!"</span><span class="pn">)</span>
+
+    <span class="kw">def</span> <span class="fn">withdraw</span><span class="pn">(</span><span class="va">self</span><span class="pn">,</span> <span class="va">amount</span><span class="pn">):</span>
+        <span class="kw">if</span> <span class="nm">0</span> <span class="op">&lt;</span> <span class="va">amount</span> <span class="op">&lt;=</span> <span class="va">self</span><span class="pn">.</span><span class="va">__balance</span><span class="pn">:</span>
+            <span class="va">self</span><span class="pn">.</span><span class="va">__balance</span> <span class="op">-=</span> <span class="va">amount</span>
+            <span class="fn">print</span><span class="pn">(</span><span class="st">f"{amount} টাকা উঠানো হয়েছে"</span><span class="pn">)</span>
+        <span class="kw">else</span><span class="pn">:</span>
+            <span class="fn">print</span><span class="pn">(</span><span class="st">"অপর্যাপ্ত ব্যালেন্স!"</span><span class="pn">)</span>
+
+<span class="va">acc</span> <span class="op">=</span> <span class="cl">BankAccount</span><span class="pn">(</span><span class="st">"Pavel"</span><span class="pn">,</span> <span class="nm">5000</span><span class="pn">)</span>
+<span class="fn">print</span><span class="pn">(</span><span class="va">acc</span><span class="pn">.</span><span class="fn">get_balance</span><span class="pn">())</span>   <span class="cm"># ব্যালেন্স: 5000 টাকা</span>
+<span class="va">acc</span><span class="pn">.</span><span class="fn">deposit</span><span class="pn">(</span><span class="nm">2000</span><span class="pn">)</span>
+<span class="fn">print</span><span class="pn">(</span><span class="va">acc</span><span class="pn">.</span><span class="fn">get_balance</span><span class="pn">())</span>   <span class="cm"># 7000</span>
+<span class="va">acc</span><span class="pn">.</span><span class="fn">withdraw</span><span class="pn">(</span><span class="nm">10000</span><span class="pn">)</span>        <span class="cm"># অপর্যাপ্ত</span>
+<span class="cm"># print(acc.__balance)  ← এটি AttributeError দেবে!</span></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 24: DECORATORS ===== -->
+<div class="section" id="s24">
+  <div class="section-card">
+    <div class="section-header sh-yellow">
+      <span class="section-icon">🎨</span>
+      <div>
+        <div class="section-title" style="color:var(--accent3)">Decorators (ডেকোরেটর)</div>
+        <div style="color:var(--text2);font-size:0.84rem">Function-কে সাজানো বা বাড়ানো</div>
+      </div>
+      <div class="section-num">24</div>
+    </div>
+    <div class="section-body">
+      <div class="explain ex-yellow">
+        <strong>Decorator</strong> হলো একটি function যা অন্য function-কে <strong>মোড়ানো</strong> (wrap) করে নতুন কিছু যোগ করে। <span class="hl hl-y">@</span> চিহ্ন দিয়ে Decorator ব্যবহার করা হয়।
+        যেমন একটি ছবির চারদিকে ফ্রেম লাগানো — ছবি একই থাকে, কিন্তু দেখতে সুন্দর হয়।
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot cd1"></div><div class="code-dot cd2"></div><div class="code-dot cd3"></div></div>
+          <span class="code-lang">PYTHON — Decorators</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="cm"># সহজ Decorator তৈরি</span>
+<span class="kw">def</span> <span class="fn">my_decorator</span><span class="pn">(</span><span class="va">func</span><span class="pn">):</span>
+    <span class="kw">def</span> <span class="fn">wrapper</span><span class="pn">():</span>
+        <span class="fn">print</span><span class="pn">(</span><span class="st">"---- শুরু হচ্ছে ----"</span><span class="pn">)</span>
+        <span class="fn">func</span><span class="pn">()</span>             <span class="cm"># আসল function call</span>
+        <span class="fn">print</span><span class="pn">(</span><span class="st">"---- শেষ হলো ----"</span><span class="pn">)</span>
+    <span class="kw">return</span> <span class="fn">wrapper</span>
+
+<span class="dec">@my_decorator</span>              <span class="cm"># এটি হলো decorator syntax</span>
+<span class="kw">def</span> <span class="fn">say_hello</span><span class="pn">():</span>
+    <span class="fn">print</span><span class="pn">(</span><span class="st">"হ্যালো!"</span><span class="pn">)</span>
+
+<span class="fn">say_hello</span><span class="pn">()</span>
+
+<span class="cm"># Argument সহ Decorator</span>
+<span class="kw">import</span> <span class="va">time</span>
+
+<span class="kw">def</span> <span class="fn">timer</span><span class="pn">(</span><span class="va">func</span><span class="pn">):</span>
+    <span class="kw">def</span> <span class="fn">wrapper</span><span class="pn">(</span><span class="op">*</span><span class="va">args</span><span class="pn">,</span> <span class="op">**</span><span class="va">kwargs</span><span class="pn">):</span>
+        <span class="va">start</span> <span class="op">=</span> <span class="va">time</span><span class="pn">.</span><span class="fn">time</span><span class="pn">()</span>
+        <span class="va">result</span> <span class="op">=</span> <span class="fn">func</span><span class="pn">(</span><span class="op">*</span><span class="va">args</span><span class="pn">,</span> <span class="op">**</span><span class="va">kwargs</span><span class="pn">)</span>
+        <span class="va">end</span> <span class="op">=</span> <span class="va">time</span><span class="pn">.</span><span class="fn">time</span><span class="pn">()</span>
+        <span class="fn">print</span><span class="pn">(</span><span class="st">f"⏱️ সময় লাগলো: {end-start:.4f} সেকেন্ড"</span><span class="pn">)</span>
+        <span class="kw">return</span> <span class="va">result</span>
+    <span class="kw">return</span> <span class="fn">wrapper</span>
+
+<span class="dec">@timer</span>
+<span class="kw">def</span> <span class="fn">calculate_sum</span><span class="pn">(</span><span class="va">n</span><span class="pn">):</span>
+    <span class="kw">return</span> <span class="bi">sum</span><span class="pn">(</span><span class="fn">range</span><span class="pn">(</span><span class="va">n</span><span class="pn">))</span>
+
+<span class="va">result</span> <span class="op">=</span> <span class="fn">calculate_sum</span><span class="pn">(</span><span class="nm">1000000</span><span class="pn">)</span>
+<span class="fn">print</span><span class="pn">(</span><span class="st">f"যোগফল: {result}"</span><span class="pn">)</span>
+
+<span class="cm"># Python-এর Built-in Decorators</span>
+<span class="kw">class</span> <span class="cl">Student</span><span class="pn">:</span>
+    <span class="kw">def</span> <span class="fn">__init__</span><span class="pn">(</span><span class="va">self</span><span class="pn">,</span> <span class="va">name</span><span class="pn">,</span> <span class="va">marks</span><span class="pn">):</span>
+        <span class="va">self</span><span class="pn">.</span><span class="va">name</span> <span class="op">=</span> <span class="va">name</span>
+        <span class="va">self</span><span class="pn">.</span><span class="va">marks</span> <span class="op">=</span> <span class="va">marks</span>
+
+    <span class="dec">@property</span>                   <span class="cm"># property decorator</span>
+    <span class="kw">def</span> <span class="fn">grade</span><span class="pn">(</span><span class="va">self</span><span class="pn">):</span>
+        <span class="kw">if</span> <span class="va">self</span><span class="pn">.</span><span class="va">marks</span> <span class="op">&gt;=</span> <span class="nm">90</span><span class="pn">:</span> <span class="kw">return</span> <span class="st">"A+"</span>
+        <span class="kw">elif</span> <span class="va">self</span><span class="pn">.</span><span class="va">marks</span> <span class="op">&gt;=</span> <span class="nm">80</span><span class="pn">:</span> <span class="kw">return</span> <span class="st">"A"</span>
+        <span class="kw">else</span><span class="pn">:</span> <span class="kw">return</span> <span class="st">"B"</span>
+
+    <span class="dec">@staticmethod</span>               <span class="cm"># static method — self লাগে না</span>
+    <span class="kw">def</span> <span class="fn">passing_marks</span><span class="pn">():</span>
+        <span class="kw">return</span> <span class="nm">33</span>
+
+<span class="va">s</span> <span class="op">=</span> <span class="cl">Student</span><span class="pn">(</span><span class="st">"Pavel"</span><span class="pn">,</span> <span class="nm">85</span><span class="pn">)</span>
+<span class="fn">print</span><span class="pn">(</span><span class="va">s</span><span class="pn">.</span><span class="va">grade</span><span class="pn">)</span>             <span class="cm"># A (method-এর মতো নয়, property)</span>
+<span class="fn">print</span><span class="pn">(</span><span class="cl">Student</span><span class="pn">.</span><span class="fn">passing_marks</span><span class="pn">())</span>  <span class="cm"># 33</span></pre>
+      </div>
+      <div class="output-box">
+        <div class="output-label">▶ OUTPUT</div>
+        <div class="output-text">---- শুরু হচ্ছে ----
+হ্যালো!
+---- শেষ হলো ----
+⏱️ সময় লাগলো: 0.0234 সেকেন্ড
+যোগফল: 499999500000
+A
+33</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 25: GENERATORS ===== -->
+<div class="section" id="s25">
+  <div class="section-card">
+    <div class="section-header sh-red">
+      <span class="section-icon">⚙️</span>
+      <div>
+        <div class="section-title" style="color:var(--accent2)">Generators (জেনারেটর)</div>
+        <div style="color:var(--text2);font-size:0.84rem">একে একে মান তৈরি করা — মেমরি বাঁচায়</div>
+      </div>
+      <div class="section-num">25</div>
+    </div>
+    <div class="section-body">
+      <div class="explain ex-red">
+        <strong>Generator</strong> হলো একটি বিশেষ function যা <strong>yield</strong> keyword ব্যবহার করে। এটি একবারে সব মান তৈরি না করে <strong>একটি একটি করে</strong> মান দেয়। এতে memory অনেক কম লাগে — বড় data-র জন্য আদর্শ।
+      </div>
+
+      <div class="two-col">
+        <div class="compare-box">
+          <div class="compare-label" style="color:var(--accent2)">❌ সাধারণ List (সব একসাথে মেমরিতে)</div>
+          <pre style="font-size:0.78rem;padding:10px;background:#060614;border-radius:8px;color:#cdd6f4"><span class="va">nums</span> <span class="op">=</span> <span class="pn">[</span><span class="va">i</span><span class="op">**</span><span class="nm">2</span> <span class="kw">for</span> <span class="va">i</span> <span class="kw">in</span> <span class="fn">range</span><span class="pn">(</span><span class="nm">1000000</span><span class="pn">)]</span>
+<span class="cm"># সব 1M মান মেমরিতে!</span></pre>
+        </div>
+        <div class="compare-box">
+          <div class="compare-label" style="color:var(--accent4)">✅ Generator (একে একে, কম মেমরি)</div>
+          <pre style="font-size:0.78rem;padding:10px;background:#060614;border-radius:8px;color:#cdd6f4"><span class="va">nums</span> <span class="op">=</span> <span class="pn">(</span><span class="va">i</span><span class="op">**</span><span class="nm">2</span> <span class="kw">for</span> <span class="va">i</span> <span class="kw">in</span> <span class="fn">range</span><span class="pn">(</span><span class="nm">1000000</span><span class="pn">))</span>
+<span class="cm"># চাইলেই একটি করে দেয়!</span></pre>
+        </div>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot cd1"></div><div class="code-dot cd2"></div><div class="code-dot cd3"></div></div>
+          <span class="code-lang">PYTHON — Generators</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="cm"># Generator function — yield ব্যবহার করে</span>
+<span class="kw">def</span> <span class="fn">count_up</span><span class="pn">(</span><span class="va">n</span><span class="pn">):</span>
+    <span class="va">i</span> <span class="op">=</span> <span class="nm">1</span>
+    <span class="kw">while</span> <span class="va">i</span> <span class="op">&lt;=</span> <span class="va">n</span><span class="pn">:</span>
+        <span class="kw">yield</span> <span class="va">i</span>     <span class="cm"># return-এর মতো, কিন্তু থামে না!</span>
+        <span class="va">i</span> <span class="op">+=</span> <span class="nm">1</span>
+
+<span class="va">gen</span> <span class="op">=</span> <span class="fn">count_up</span><span class="pn">(</span><span class="nm">5</span><span class="pn">)</span>
+<span class="fn">print</span><span class="pn">(</span><span class="bi">next</span><span class="pn">(</span><span class="va">gen</span><span class="pn">))</span>  <span class="cm"># 1</span>
+<span class="fn">print</span><span class="pn">(</span><span class="bi">next</span><span class="pn">(</span><span class="va">gen</span><span class="pn">))</span>  <span class="cm"># 2</span>
+<span class="fn">print</span><span class="pn">(</span><span class="bi">next</span><span class="pn">(</span><span class="va">gen</span><span class="pn">))</span>  <span class="cm"># 3</span>
+
+<span class="cm"># for loop দিয়েও ব্যবহার করা যায়</span>
+<span class="kw">for</span> <span class="va">num</span> <span class="kw">in</span> <span class="fn">count_up</span><span class="pn">(</span><span class="nm">5</span><span class="pn">):</span>
+    <span class="fn">print</span><span class="pn">(</span><span class="va">num</span><span class="pn">,</span> <span class="va">end</span><span class="op">=</span><span class="st">" "</span><span class="pn">)</span>   <span class="cm"># 1 2 3 4 5</span>
+
+<span class="cm"># Fibonacci Generator</span>
+<span class="kw">def</span> <span class="fn">fibonacci</span><span class="pn">():</span>
+    <span class="va">a</span><span class="pn">,</span> <span class="va">b</span> <span class="op">=</span> <span class="nm">0</span><span class="pn">,</span> <span class="nm">1</span>
+    <span class="kw">while</span> <span class="kw">True</span><span class="pn">:</span>      <span class="cm"># অসীম Generator!</span>
+        <span class="kw">yield</span> <span class="va">a</span>
+        <span class="va">a</span><span class="pn">,</span> <span class="va">b</span> <span class="op">=</span> <span class="va">b</span><span class="pn">,</span> <span class="va">a</span> <span class="op">+</span> <span class="va">b</span>
+
+<span class="va">fib</span> <span class="op">=</span> <span class="fn">fibonacci</span><span class="pn">()</span>
+<span class="kw">for</span> <span class="va">_</span> <span class="kw">in</span> <span class="fn">range</span><span class="pn">(</span><span class="nm">10</span><span class="pn">):</span>
+    <span class="fn">print</span><span class="pn">(</span><span class="bi">next</span><span class="pn">(</span><span class="va">fib</span><span class="pn">),</span> <span class="va">end</span><span class="op">=</span><span class="st">" "</span><span class="pn">)</span>  <span class="cm"># 0 1 1 2 3 5 8 13 21 34</span>
+
+<span class="cm"># Generator Expression (( ) ব্যবহার করে)</span>
+<span class="va">squares_gen</span> <span class="op">=</span> <span class="pn">(</span><span class="va">x</span><span class="op">**</span><span class="nm">2</span> <span class="kw">for</span> <span class="va">x</span> <span class="kw">in</span> <span class="fn">range</span><span class="pn">(</span><span class="nm">1</span><span class="pn">,</span> <span class="nm">6</span><span class="pn">))</span>
+<span class="fn">print</span><span class="pn">(</span><span class="bi">list</span><span class="pn">(</span><span class="va">squares_gen</span><span class="pn">))</span>  <span class="cm"># [1, 4, 9, 16, 25]</span></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 26: RECURSION ===== -->
+<div class="section" id="s26">
+  <div class="section-card">
+    <div class="section-header sh-orange">
+      <span class="section-icon">🌀</span>
+      <div>
+        <div class="section-title" style="color:var(--accent6)">Recursion (পুনরাবৃত্তি)</div>
+        <div style="color:var(--text2);font-size:0.84rem">Function নিজেই নিজেকে Call করা</div>
+      </div>
+      <div class="section-num">26</div>
+    </div>
+    <div class="section-body">
+      <div class="explain ex-orange">
+        <strong>Recursion</strong> মানে একটি function নিজেকে আবার call করা। যেমন আয়নার সামনে আয়না রাখলে অসীম প্রতিফলন দেখা যায়।
+        তবে Recursion-এ অবশ্যই একটি <strong>Base Case</strong> থাকতে হবে — যেখানে recursion থামে।
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot cd1"></div><div class="code-dot cd2"></div><div class="code-dot cd3"></div></div>
+          <span class="code-lang">PYTHON — Recursion</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="cm"># Factorial — n! = n × (n-1) × (n-2) × ... × 1</span>
+<span class="kw">def</span> <span class="fn">factorial</span><span class="pn">(</span><span class="va">n</span><span class="pn">):</span>
+    <span class="kw">if</span> <span class="va">n</span> <span class="op">==</span> <span class="nm">0</span> <span class="kw">or</span> <span class="va">n</span> <span class="op">==</span> <span class="nm">1</span><span class="pn">:</span>  <span class="cm"># Base Case — এখানে থামে</span>
+        <span class="kw">return</span> <span class="nm">1</span>
+    <span class="kw">return</span> <span class="va">n</span> <span class="op">*</span> <span class="fn">factorial</span><span class="pn">(</span><span class="va">n</span> <span class="op">-</span> <span class="nm">1</span><span class="pn">)</span>  <span class="cm"># নিজেকে call</span>
+
+<span class="fn">print</span><span class="pn">(</span><span class="fn">factorial</span><span class="pn">(</span><span class="nm">5</span><span class="pn">))</span>   <span class="cm"># 120 (5×4×3×2×1)</span>
+<span class="fn">print</span><span class="pn">(</span><span class="fn">factorial</span><span class="pn">(</span><span class="nm">10</span><span class="pn">))</span>  <span class="cm"># 3628800</span>
+
+<span class="cm"># Fibonacci Recursion</span>
+<span class="kw">def</span> <span class="fn">fib</span><span class="pn">(</span><span class="va">n</span><span class="pn">):</span>
+    <span class="kw">if</span> <span class="va">n</span> <span class="op">&lt;=</span> <span class="nm">1</span><span class="pn">:</span>
+        <span class="kw">return</span> <span class="va">n</span>                    <span class="cm"># Base Case</span>
+    <span class="kw">return</span> <span class="fn">fib</span><span class="pn">(</span><span class="va">n</span><span class="op">-</span><span class="nm">1</span><span class="pn">)</span> <span class="op">+</span> <span class="fn">fib</span><span class="pn">(</span><span class="va">n</span><span class="op">-</span><span class="nm">2</span><span class="pn">)</span>
+
+<span class="kw">for</span> <span class="va">i</span> <span class="kw">in</span> <span class="fn">range</span><span class="pn">(</span><span class="nm">8</span><span class="pn">):</span>
+    <span class="fn">print</span><span class="pn">(</span><span class="fn">fib</span><span class="pn">(</span><span class="va">i</span><span class="pn">),</span> <span class="va">end</span><span class="op">=</span><span class="st">" "</span><span class="pn">)</span>  <span class="cm"># 0 1 1 2 3 5 8 13</span>
+
+<span class="cm"># Power function — x^n</span>
+<span class="kw">def</span> <span class="fn">power</span><span class="pn">(</span><span class="va">base</span><span class="pn">,</span> <span class="va">exp</span><span class="pn">):</span>
+    <span class="kw">if</span> <span class="va">exp</span> <span class="op">==</span> <span class="nm">0</span><span class="pn">:</span>
+        <span class="kw">return</span> <span class="nm">1</span>                    <span class="cm"># Base Case: x^0 = 1</span>
+    <span class="kw">return</span> <span class="va">base</span> <span class="op">*</span> <span class="fn">power</span><span class="pn">(</span><span class="va">base</span><span class="pn">,</span> <span class="va">exp</span><span class="op">-</span><span class="nm">1</span><span class="pn">)</span>
+
+<span class="fn">print</span><span class="pn">(</span><span class="fn">power</span><span class="pn">(</span><span class="nm">2</span><span class="pn">,</span> <span class="nm">8</span><span class="pn">))</span>   <span class="cm"># 256</span>
+
+<span class="cm"># Sum of digits — ৩৫২১ → 3+5+2+1 = 11</span>
+<span class="kw">def</span> <span class="fn">digit_sum</span><span class="pn">(</span><span class="va">n</span><span class="pn">):</span>
+    <span class="kw">if</span> <span class="va">n</span> <span class="op">&lt;</span> <span class="nm">10</span><span class="pn">:</span>
+        <span class="kw">return</span> <span class="va">n</span>
+    <span class="kw">return</span> <span class="va">n</span> <span class="op">%</span> <span class="nm">10</span> <span class="op">+</span> <span class="fn">digit_sum</span><span class="pn">(</span><span class="va">n</span> <span class="op">//</span> <span class="nm">10</span><span class="pn">)</span>
+
+<span class="fn">print</span><span class="pn">(</span><span class="fn">digit_sum</span><span class="pn">(</span><span class="nm">3521</span><span class="pn">))</span>   <span class="cm"># 11</span></pre>
+      </div>
+      <div class="output-box">
+        <div class="output-label">▶ OUTPUT</div>
+        <div class="output-text">120
+3628800
+0 1 1 2 3 5 8 13
+256
+11</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 27: MAP FILTER REDUCE ===== -->
+<div class="section" id="s27">
+  <div class="section-card">
+    <div class="section-header sh-teal">
+      <span class="section-icon">🗺️</span>
+      <div>
+        <div class="section-title" style="color:var(--accent1)">Map, Filter, Reduce</div>
+        <div style="color:var(--text2);font-size:0.84rem">Functional Programming-এর শক্তিশালী Tools</div>
+      </div>
+      <div class="section-num">27</div>
+    </div>
+    <div class="section-body">
+      <div class="explain ex-blue">
+        এই তিনটি হলো Python-এর শক্তিশালী functional tools:
+        <br>• <span class="hl hl-b">map()</span> — প্রতিটি element-এ function প্রয়োগ
+        <br>• <span class="hl hl-g">filter()</span> — শর্ত মেনে element বাছাই
+        <br>• <span class="hl hl-p">reduce()</span> — সব element কমিয়ে একটি মান
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot cd1"></div><div class="code-dot cd2"></div><div class="code-dot cd3"></div></div>
+          <span class="code-lang">PYTHON — Map, Filter, Reduce</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="va">numbers</span> <span class="op">=</span> <span class="pn">[</span><span class="nm">1</span><span class="pn">,</span> <span class="nm">2</span><span class="pn">,</span> <span class="nm">3</span><span class="pn">,</span> <span class="nm">4</span><span class="pn">,</span> <span class="nm">5</span><span class="pn">,</span> <span class="nm">6</span><span class="pn">,</span> <span class="nm">7</span><span class="pn">,</span> <span class="nm">8</span><span class="pn">,</span> <span class="nm">9</span><span class="pn">,</span> <span class="nm">10</span><span class="pn">]</span>
+
+<span class="cm"># ===== MAP =====</span>
+<span class="cm"># প্রতিটি সংখ্যার বর্গ করো</span>
+<span class="va">squares</span> <span class="op">=</span> <span class="bi">list</span><span class="pn">(</span><span class="fn">map</span><span class="pn">(</span><span class="kw">lambda</span> <span class="va">x</span><span class="pn">:</span> <span class="va">x</span><span class="op">**</span><span class="nm">2</span><span class="pn">,</span> <span class="va">numbers</span><span class="pn">))</span>
+<span class="fn">print</span><span class="pn">(</span><span class="st">"বর্গ:"</span><span class="pn">,</span> <span class="va">squares</span><span class="pn">)</span>
+<span class="cm"># [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]</span>
+
+<span class="cm"># String-এ map ব্যবহার</span>
+<span class="va">names</span> <span class="op">=</span> <span class="pn">[</span><span class="st">"pavel"</span><span class="pn">,</span> <span class="st">"sakib"</span><span class="pn">,</span> <span class="st">"rakib"</span><span class="pn">]</span>
+<span class="va">upper_names</span> <span class="op">=</span> <span class="bi">list</span><span class="pn">(</span><span class="fn">map</span><span class="pn">(</span><span class="bi">str</span><span class="pn">.</span><span class="fn">upper</span><span class="pn">,</span> <span class="va">names</span><span class="pn">))</span>
+<span class="fn">print</span><span class="pn">(</span><span class="st">"বড় হাতে:"</span><span class="pn">,</span> <span class="va">upper_names</span><span class="pn">)</span>
+
+<span class="cm"># ===== FILTER =====</span>
+<span class="cm"># শুধু জোড় সংখ্যা রাখো</span>
+<span class="va">evens</span> <span class="op">=</span> <span class="bi">list</span><span class="pn">(</span><span class="fn">filter</span><span class="pn">(</span><span class="kw">lambda</span> <span class="va">x</span><span class="pn">:</span> <span class="va">x</span> <span class="op">%</span> <span class="nm">2</span> <span class="op">==</span> <span class="nm">0</span><span class="pn">,</span> <span class="va">numbers</span><span class="pn">))</span>
+<span class="fn">print</span><span class="pn">(</span><span class="st">"জোড়:"</span><span class="pn">,</span> <span class="va">evens</span><span class="pn">)</span>      <span class="cm"># [2, 4, 6, 8, 10]</span>
+
+<span class="cm"># শুধু ৫ এর বেশি</span>
+<span class="va">big</span> <span class="op">=</span> <span class="bi">list</span><span class="pn">(</span><span class="fn">filter</span><span class="pn">(</span><span class="kw">lambda</span> <span class="va">x</span><span class="pn">:</span> <span class="va">x</span> <span class="op">&gt;</span> <span class="nm">5</span><span class="pn">,</span> <span class="va">numbers</span><span class="pn">))</span>
+<span class="fn">print</span><span class="pn">(</span><span class="st">"৫ এর বেশি:"</span><span class="pn">,</span> <span class="va">big</span><span class="pn">)</span>   <span class="cm"># [6, 7, 8, 9, 10]</span>
+
+<span class="cm"># ===== REDUCE =====</span>
+<span class="kw">from</span> <span class="va">functools</span> <span class="kw">import</span> <span class="fn">reduce</span>
+
+<span class="cm"># সব সংখ্যার গুণফল</span>
+<span class="va">product</span> <span class="op">=</span> <span class="fn">reduce</span><span class="pn">(</span><span class="kw">lambda</span> <span class="va">x</span><span class="pn">,</span> <span class="va">y</span><span class="pn">:</span> <span class="va">x</span> <span class="op">*</span> <span class="va">y</span><span class="pn">,</span> <span class="pn">[</span><span class="nm">1</span><span class="pn">,</span><span class="nm">2</span><span class="pn">,</span><span class="nm">3</span><span class="pn">,</span><span class="nm">4</span><span class="pn">,</span><span class="nm">5</span><span class="pn">])</span>
+<span class="fn">print</span><span class="pn">(</span><span class="st">"গুণফল:"</span><span class="pn">,</span> <span class="va">product</span><span class="pn">)</span>   <span class="cm"># 120</span>
+
+<span class="cm"># সবচেয়ে বড় খোঁজা</span>
+<span class="va">maximum</span> <span class="op">=</span> <span class="fn">reduce</span><span class="pn">(</span><span class="kw">lambda</span> <span class="va">a</span><span class="pn">,</span> <span class="va">b</span><span class="pn">:</span> <span class="va">a</span> <span class="kw">if</span> <span class="va">a</span> <span class="op">&gt;</span> <span class="va">b</span> <span class="kw">else</span> <span class="va">b</span><span class="pn">,</span> <span class="va">numbers</span><span class="pn">)</span>
+<span class="fn">print</span><span class="pn">(</span><span class="st">"সর্বোচ্চ:"</span><span class="pn">,</span> <span class="va">maximum</span><span class="pn">)</span>  <span class="cm"># 10</span>
+
+<span class="cm"># একসাথে map + filter ব্যবহার</span>
+<span class="cm"># জোড় সংখ্যার বর্গ</span>
+<span class="va">result</span> <span class="op">=</span> <span class="bi">list</span><span class="pn">(</span><span class="fn">map</span><span class="pn">(</span><span class="kw">lambda</span> <span class="va">x</span><span class="pn">:</span> <span class="va">x</span><span class="op">**</span><span class="nm">2</span><span class="pn">,</span>
+              <span class="fn">filter</span><span class="pn">(</span><span class="kw">lambda</span> <span class="va">x</span><span class="pn">:</span> <span class="va">x</span><span class="op">%</span><span class="nm">2</span><span class="op">==</span><span class="nm">0</span><span class="pn">,</span> <span class="va">numbers</span><span class="pn">)))</span>
+<span class="fn">print</span><span class="pn">(</span><span class="st">"জোড়ের বর্গ:"</span><span class="pn">,</span> <span class="va">result</span><span class="pn">)</span>   <span class="cm"># [4, 16, 36, 64, 100]</span></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 28: REGEX ===== -->
+<div class="section" id="s28">
+  <div class="section-card">
+    <div class="section-header sh-pink">
+      <span class="section-icon">🔍</span>
+      <div>
+        <div class="section-title" style="color:var(--accent5)">Regular Expressions (Regex)</div>
+        <div style="color:var(--text2);font-size:0.84rem">Text-এ Pattern খোঁজার শক্তিশালী পদ্ধতি</div>
+      </div>
+      <div class="section-num">28</div>
+    </div>
+    <div class="section-body">
+      <div class="explain ex-purple">
+        <strong>Regular Expression (re)</strong> হলো text-এ নির্দিষ্ট pattern খোঁজার পদ্ধতি। যেমন email address বৈধ কিনা, ফোন নম্বর সঠিক কিনা — এসব দেখতে Regex ব্যবহার করা হয়।
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <tr><th>Pattern</th><th>অর্থ</th><th>উদাহরণ</th></tr>
+          <tr><td class="td-code">\d</td><td>যেকোনো সংখ্যা (0-9)</td><td class="td-code">\d{4} = 4-digit সংখ্যা</td></tr>
+          <tr><td class="td-code">\w</td><td>অক্ষর, সংখ্যা, underscore</td><td class="td-code">\w+</td></tr>
+          <tr><td class="td-code">\s</td><td>Space/whitespace</td><td class="td-code">\s+</td></tr>
+          <tr><td class="td-code">.</td><td>যেকোনো একটি character</td><td class="td-code">a.c = abc, adc</td></tr>
+          <tr><td class="td-code">*</td><td>০ বা বেশিবার</td><td class="td-code">ab* = a, ab, abb</td></tr>
+          <tr><td class="td-code">+</td><td>১ বা বেশিবার</td><td class="td-code">ab+ = ab, abb</td></tr>
+          <tr><td class="td-code">^</td><td>শুরুতে</td><td class="td-code">^Hello</td></tr>
+          <tr><td class="td-code">$</td><td>শেষে</td><td class="td-code">world$</td></tr>
+        </table>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot cd1"></div><div class="code-dot cd2"></div><div class="code-dot cd3"></div></div>
+          <span class="code-lang">PYTHON — Regular Expressions</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="kw">import</span> <span class="va">re</span>
+
+<span class="cm"># re.search() — pattern খোঁজা</span>
+<span class="va">text</span> <span class="op">=</span> <span class="st">"আমার ফোন নম্বর 01712345678"</span>
+<span class="va">match</span> <span class="op">=</span> <span class="va">re</span><span class="pn">.</span><span class="fn">search</span><span class="pn">(</span><span class="st">r'\d{11}'</span><span class="pn">,</span> <span class="va">text</span><span class="pn">)</span>
+<span class="kw">if</span> <span class="va">match</span><span class="pn">:</span>
+    <span class="fn">print</span><span class="pn">(</span><span class="st">"ফোন নম্বর পাওয়া গেছে:"</span><span class="pn">,</span> <span class="va">match</span><span class="pn">.</span><span class="fn">group</span><span class="pn">())</span>
+
+<span class="cm"># re.match() — শুরু থেকে match</span>
+<span class="va">pattern</span> <span class="op">=</span> <span class="st">r'^[A-Za-z]+'</span>
+<span class="fn">print</span><span class="pn">(</span><span class="va">re</span><span class="pn">.</span><span class="fn">match</span><span class="pn">(</span><span class="va">pattern</span><span class="pn">,</span> <span class="st">"Pavel123"</span><span class="pn">).</span><span class="fn">group</span><span class="pn">())</span>  <span class="cm"># Pavel</span>
+
+<span class="cm"># re.findall() — সব match খোঁজা</span>
+<span class="va">sentence</span> <span class="op">=</span> <span class="st">"I have 3 cats and 5 dogs and 12 fish"</span>
+<span class="va">numbers</span> <span class="op">=</span> <span class="va">re</span><span class="pn">.</span><span class="fn">findall</span><span class="pn">(</span><span class="st">r'\d+'</span><span class="pn">,</span> <span class="va">sentence</span><span class="pn">)</span>
+<span class="fn">print</span><span class="pn">(</span><span class="st">"সব সংখ্যা:"</span><span class="pn">,</span> <span class="va">numbers</span><span class="pn">)</span>   <span class="cm"># ['3', '5', '12']</span>
+
+<span class="cm"># re.sub() — replace করা</span>
+<span class="va">text</span> <span class="op">=</span> <span class="st">"ফোন: 01712345678 এবং 01987654321"</span>
+<span class="va">masked</span> <span class="op">=</span> <span class="va">re</span><span class="pn">.</span><span class="fn">sub</span><span class="pn">(</span><span class="st">r'\d{11}'</span><span class="pn">,</span> <span class="st">"***লুকানো***"</span><span class="pn">,</span> <span class="va">text</span><span class="pn">)</span>
+<span class="fn">print</span><span class="pn">(</span><span class="va">masked</span><span class="pn">)</span>
+
+<span class="cm"># Email Validation</span>
+<span class="kw">def</span> <span class="fn">is_valid_email</span><span class="pn">(</span><span class="va">email</span><span class="pn">):</span>
+    <span class="va">pattern</span> <span class="op">=</span> <span class="st">r'^[\w.-]+@[\w.-]+\.\w{2,}$'</span>
+    <span class="kw">return</span> <span class="bi">bool</span><span class="pn">(</span><span class="va">re</span><span class="pn">.</span><span class="fn">match</span><span class="pn">(</span><span class="va">pattern</span><span class="pn">,</span> <span class="va">email</span><span class="pn">))</span>
+
+<span class="fn">print</span><span class="pn">(</span><span class="fn">is_valid_email</span><span class="pn">(</span><span class="st">"pavel@example.com"</span><span class="pn">))</span>   <span class="cm"># True</span>
+<span class="fn">print</span><span class="pn">(</span><span class="fn">is_valid_email</span><span class="pn">(</span><span class="st">"not-an-email"</span><span class="pn">))</span>        <span class="cm"># False</span></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 29: ARGS KWARGS ===== -->
+<div class="section" id="s29">
+  <div class="section-card">
+    <div class="section-header sh-indigo">
+      <span class="section-icon">📬</span>
+      <div>
+        <div class="section-title" style="color:var(--accent1)">*args এবং **kwargs</div>
+        <div style="color:var(--text2);font-size:0.84rem">যেকোনো সংখ্যক argument পাঠানো</div>
+      </div>
+      <div class="section-num">29</div>
+    </div>
+    <div class="section-body">
+      <div class="explain ex-blue">
+        <span class="hl hl-b">*args</span> = যেকোনো সংখ্যক <strong>positional</strong> argument (tuple হিসেবে পায়)<br>
+        <span class="hl hl-p">**kwargs</span> = যেকোনো সংখ্যক <strong>keyword</strong> argument (dictionary হিসেবে পায়)
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot cd1"></div><div class="code-dot cd2"></div><div class="code-dot cd3"></div></div>
+          <span class="code-lang">PYTHON — *args & **kwargs</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="cm"># *args — যতগুলো সংখ্যা দাও, সব যোগ করবে</span>
+<span class="kw">def</span> <span class="fn">total</span><span class="pn">(</span><span class="op">*</span><span class="va">numbers</span><span class="pn">):</span>
+    <span class="fn">print</span><span class="pn">(</span><span class="st">f"পাওয়া গেছে: {numbers}"</span><span class="pn">)</span>  <span class="cm"># tuple</span>
+    <span class="kw">return</span> <span class="bi">sum</span><span class="pn">(</span><span class="va">numbers</span><span class="pn">)</span>
+
+<span class="fn">print</span><span class="pn">(</span><span class="fn">total</span><span class="pn">(</span><span class="nm">1</span><span class="pn">,</span> <span class="nm">2</span><span class="pn">,</span> <span class="nm">3</span><span class="pn">))</span>            <span class="cm"># 6</span>
+<span class="fn">print</span><span class="pn">(</span><span class="fn">total</span><span class="pn">(</span><span class="nm">10</span><span class="pn">,</span> <span class="nm">20</span><span class="pn">,</span> <span class="nm">30</span><span class="pn">,</span> <span class="nm">40</span><span class="pn">))</span>     <span class="cm"># 100</span>
+
+<span class="cm"># **kwargs — keyword argument</span>
+<span class="kw">def</span> <span class="fn">profile</span><span class="pn">(</span><span class="op">**</span><span class="va">info</span><span class="pn">):</span>
+    <span class="fn">print</span><span class="pn">(</span><span class="st">"--- তথ্য ---"</span><span class="pn">)</span>
+    <span class="kw">for</span> <span class="va">key</span><span class="pn">,</span> <span class="va">value</span> <span class="kw">in</span> <span class="va">info</span><span class="pn">.</span><span class="fn">items</span><span class="pn">():</span>
+        <span class="fn">print</span><span class="pn">(</span><span class="st">f"{key}: {value}"</span><span class="pn">)</span>
+
+<span class="fn">profile</span><span class="pn">(</span><span class="va">name</span><span class="op">=</span><span class="st">"Pavel"</span><span class="pn">,</span> <span class="va">age</span><span class="op">=</span><span class="nm">20</span><span class="pn">,</span> <span class="va">dept</span><span class="op">=</span><span class="st">"CSE"</span><span class="pn">)</span>
+
+<span class="cm"># সব একসাথে ব্যবহার</span>
+<span class="kw">def</span> <span class="fn">full_function</span><span class="pn">(</span><span class="va">required</span><span class="pn">,</span> <span class="op">*</span><span class="va">args</span><span class="pn">,</span> <span class="op">**</span><span class="va">kwargs</span><span class="pn">):</span>
+    <span class="fn">print</span><span class="pn">(</span><span class="st">f"প্রয়োজনীয়: {required}"</span><span class="pn">)</span>
+    <span class="fn">print</span><span class="pn">(</span><span class="st">f"অতিরিক্ত: {args}"</span><span class="pn">)</span>
+    <span class="fn">print</span><span class="pn">(</span><span class="st">f"named: {kwargs}"</span><span class="pn">)</span>
+
+<span class="fn">full_function</span><span class="pn">(</span><span class="st">"first"</span><span class="pn">,</span> <span class="st">"a"</span><span class="pn">,</span> <span class="st">"b"</span><span class="pn">,</span> <span class="va">x</span><span class="op">=</span><span class="nm">1</span><span class="pn">,</span> <span class="va">y</span><span class="op">=</span><span class="nm">2</span><span class="pn">)</span>
+
+<span class="cm"># Unpacking — list/dict কে argument হিসেবে পাঠানো</span>
+<span class="va">my_list</span> <span class="op">=</span> <span class="pn">[</span><span class="nm">1</span><span class="pn">,</span> <span class="nm">2</span><span class="pn">,</span> <span class="nm">3</span><span class="pn">]</span>
+<span class="fn">print</span><span class="pn">(</span><span class="fn">total</span><span class="pn">(</span><span class="op">*</span><span class="va">my_list</span><span class="pn">))</span>        <span class="cm"># 6  (* দিয়ে unpack)</span>
+
+<span class="va">my_dict</span> <span class="op">=</span> <span class="pn">{</span><span class="st">"name"</span><span class="pn">:</span><span class="st">"Pavel"</span><span class="pn">,</span> <span class="st">"age"</span><span class="pn">:</span><span class="nm">20</span><span class="pn">}</span>
+<span class="fn">profile</span><span class="pn">(</span><span class="op">**</span><span class="va">my_dict</span><span class="pn">)</span>           <span class="cm"># ** দিয়ে unpack</span></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 30: SCOPE & CLOSURE ===== -->
+<div class="section" id="s30" style="scroll-margin-top:20px">
+  <div class="section-card">
+    <div class="section-header sh-gold">
+      <span class="section-icon">🎯</span>
+      <div>
+        <div class="section-title" style="color:var(--accent3)">Scope এবং Closure</div>
+        <div style="color:var(--text2);font-size:0.84rem">Variable কোথায় দেখা যায় — Local vs Global</div>
+      </div>
+      <div class="section-num">30</div>
+    </div>
+    <div class="section-body">
+      <div class="explain ex-yellow">
+        <strong>Scope</strong> মানে variable কোথায় কোথায় দেখা যাবে।
+        <br>• <span class="hl hl-g">Local</span> = function-এর ভেতরে তৈরি, শুধু সেখানেই দেখা যায়
+        <br>• <span class="hl hl-b">Global</span> = সবার বাইরে তৈরি, সব জায়গায় দেখা যায়
+        <br>• <strong>Closure</strong> = একটি nested function যে বাইরের function-এর variable মনে রাখে
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot cd1"></div><div class="code-dot cd2"></div><div class="code-dot cd3"></div></div>
+          <span class="code-lang">PYTHON — Scope & Closure</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="cm"># Global vs Local scope</span>
+<span class="va">x</span> <span class="op">=</span> <span class="nm">10</span>       <span class="cm"># Global variable</span>
+
+<span class="kw">def</span> <span class="fn">my_func</span><span class="pn">():</span>
+    <span class="va">x</span> <span class="op">=</span> <span class="nm">20</span>   <span class="cm"># Local variable (আলাদা x!)</span>
+    <span class="fn">print</span><span class="pn">(</span><span class="st">f"ভেতরে x = {x}"</span><span class="pn">)</span>    <span class="cm"># 20</span>
+
+<span class="fn">my_func</span><span class="pn">()</span>
+<span class="fn">print</span><span class="pn">(</span><span class="st">f"বাইরে x = {x}"</span><span class="pn">)</span>         <span class="cm"># 10 (পরিবর্তিত হয়নি)</span>
+
+<span class="cm"># global keyword দিয়ে global variable পরিবর্তন</span>
+<span class="va">count</span> <span class="op">=</span> <span class="nm">0</span>
+
+<span class="kw">def</span> <span class="fn">increment</span><span class="pn">():</span>
+    <span class="kw">global</span> <span class="va">count</span>    <span class="cm"># global ঘোষণা করা</span>
+    <span class="va">count</span> <span class="op">+=</span> <span class="nm">1</span>
+
+<span class="fn">increment</span><span class="pn">()</span>
+<span class="fn">increment</span><span class="pn">()</span>
+<span class="fn">print</span><span class="pn">(</span><span class="va">count</span><span class="pn">)</span>  <span class="cm"># 2</span>
+
+<span class="cm"># Closure — inner function, outer variable মনে রাখে</span>
+<span class="kw">def</span> <span class="fn">counter</span><span class="pn">(</span><span class="va">start</span><span class="op">=</span><span class="nm">0</span><span class="pn">):</span>
+    <span class="va">count</span> <span class="op">=</span> <span class="va">start</span>
+
+    <span class="kw">def</span> <span class="fn">increment</span><span class="pn">():</span>
+        <span class="kw">nonlocal</span> <span class="va">count</span>   <span class="cm"># outer variable ব্যবহার</span>
+        <span class="va">count</span> <span class="op">+=</span> <span class="nm">1</span>
+        <span class="kw">return</span> <span class="va">count</span>
+
+    <span class="kw">return</span> <span class="fn">increment</span>    <span class="cm"># function return করছে!</span>
+
+<span class="va">my_counter</span> <span class="op">=</span> <span class="fn">counter</span><span class="pn">(</span><span class="nm">10</span><span class="pn">)</span>
+<span class="fn">print</span><span class="pn">(</span><span class="fn">my_counter</span><span class="pn">())</span>   <span class="cm"># 11</span>
+<span class="fn">print</span><span class="pn">(</span><span class="fn">my_counter</span><span class="pn">())</span>   <span class="cm"># 12</span>
+<span class="fn">print</span><span class="pn">(</span><span class="fn">my_counter</span><span class="pn">())</span>   <span class="cm"># 13</span>
+
+<span class="cm"># Closure দিয়ে Multiplier তৈরি</span>
+<span class="kw">def</span> <span class="fn">multiplier</span><span class="pn">(</span><span class="va">factor</span><span class="pn">):</span>
+    <span class="kw">def</span> <span class="fn">multiply</span><span class="pn">(</span><span class="va">n</span><span class="pn">):</span>
+        <span class="kw">return</span> <span class="va">n</span> <span class="op">*</span> <span class="va">factor</span>   <span class="cm"># factor মনে রাখে</span>
+    <span class="kw">return</span> <span class="fn">multiply</span>
+
+<span class="va">double</span> <span class="op">=</span> <span class="fn">multiplier</span><span class="pn">(</span><span class="nm">2</span><span class="pn">)</span>
+<span class="va">triple</span> <span class="op">=</span> <span class="fn">multiplier</span><span class="pn">(</span><span class="nm">3</span><span class="pn">)</span>
+<span class="fn">print</span><span class="pn">(</span><span class="fn">double</span><span class="pn">(</span><span class="nm">5</span><span class="pn">))</span>    <span class="cm"># 10</span>
+<span class="fn">print</span><span class="pn">(</span><span class="fn">triple</span><span class="pn">(</span><span class="nm">5</span><span class="pn">))</span>    <span class="cm"># 15</span></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 31: JSON ===== -->
+<div class="section" id="s34">
+  <div class="section-card">
+    <div class="section-header sh-green">
+      <span class="section-icon">📊</span>
+      <div>
+        <div class="section-title" style="color:var(--accent4)">JSON Data নিয়ে কাজ</div>
+        <div style="color:var(--text2);font-size:0.84rem">ইন্টারনেটের সবচেয়ে জনপ্রিয় data format</div>
+      </div>
+      <div class="section-num">34</div>
+    </div>
+    <div class="section-body">
+      <div class="explain ex-green">
+        <strong>JSON (JavaScript Object Notation)</strong> হলো data আদান-প্রদানের সবচেয়ে জনপ্রিয় format। API থেকে data আসে JSON-এ। Python-এ <span class="hl hl-g">json</span> module দিয়ে JSON নিয়ে কাজ করা যায়।
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot cd1"></div><div class="code-dot cd2"></div><div class="code-dot cd3"></div></div>
+          <span class="code-lang">PYTHON — JSON</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="kw">import</span> <span class="va">json</span>
+
+<span class="cm"># Python Dictionary → JSON String</span>
+<span class="va">student</span> <span class="op">=</span> <span class="pn">{</span>
+    <span class="st">"name"</span><span class="pn">:</span> <span class="st">"Pavel"</span><span class="pn">,</span>
+    <span class="st">"age"</span><span class="pn">:</span> <span class="nm">20</span><span class="pn">,</span>
+    <span class="st">"courses"</span><span class="pn">:</span> <span class="pn">[</span><span class="st">"CSE-401"</span><span class="pn">,</span> <span class="st">"CSE-302"</span><span class="pn">,</span> <span class="st">"CSE-201"</span><span class="pn">]</span><span class="pn">,</span>
+    <span class="st">"active"</span><span class="pn">:</span> <span class="kw">True</span>
+<span class="pn">}</span>
+
+<span class="cm"># dumps() — dict থেকে JSON string তৈরি</span>
+<span class="va">json_str</span> <span class="op">=</span> <span class="va">json</span><span class="pn">.</span><span class="fn">dumps</span><span class="pn">(</span><span class="va">student</span><span class="pn">,</span> <span class="va">indent</span><span class="op">=</span><span class="nm">2</span><span class="pn">,</span> <span class="va">ensure_ascii</span><span class="op">=</span><span class="kw">False</span><span class="pn">)</span>
+<span class="fn">print</span><span class="pn">(</span><span class="va">json_str</span><span class="pn">)</span>
+
+<span class="cm"># loads() — JSON string থেকে dict তৈরি</span>
+<span class="va">json_data</span> <span class="op">=</span> <span class="st">'{"city": "Dhaka", "population": 22000000}'</span>
+<span class="va">data</span> <span class="op">=</span> <span class="va">json</span><span class="pn">.</span><span class="fn">loads</span><span class="pn">(</span><span class="va">json_data</span><span class="pn">)</span>
+<span class="fn">print</span><span class="pn">(</span><span class="va">data</span><span class="pn">[</span><span class="st">"city"</span><span class="pn">])</span>   <span class="cm"># Dhaka</span>
+
+<span class="cm"># ফাইলে JSON সংরক্ষণ</span>
+<span class="kw">with</span> <span class="fn">open</span><span class="pn">(</span><span class="st">"student.json"</span><span class="pn">,</span> <span class="st">"w"</span><span class="pn">,</span> <span class="va">encoding</span><span class="op">=</span><span class="st">"utf-8"</span><span class="pn">)</span> <span class="kw">as</span> <span class="va">f</span><span class="pn">:</span>
+    <span class="va">json</span><span class="pn">.</span><span class="fn">dump</span><span class="pn">(</span><span class="va">student</span><span class="pn">,</span> <span class="va">f</span><span class="pn">,</span> <span class="va">indent</span><span class="op">=</span><span class="nm">2</span><span class="pn">,</span> <span class="va">ensure_ascii</span><span class="op">=</span><span class="kw">False</span><span class="pn">)</span>
+    <span class="fn">print</span><span class="pn">(</span><span class="st">"JSON ফাইল তৈরি হয়েছে!"</span><span class="pn">)</span>
+
+<span class="cm"># ফাইল থেকে JSON পড়া</span>
+<span class="kw">with</span> <span class="fn">open</span><span class="pn">(</span><span class="st">"student.json"</span><span class="pn">,</span> <span class="st">"r"</span><span class="pn">,</span> <span class="va">encoding</span><span class="op">=</span><span class="st">"utf-8"</span><span class="pn">)</span> <span class="kw">as</span> <span class="va">f</span><span class="pn">:</span>
+    <span class="va">loaded</span> <span class="op">=</span> <span class="va">json</span><span class="pn">.</span><span class="fn">load</span><span class="pn">(</span><span class="va">f</span><span class="pn">)</span>
+    <span class="fn">print</span><span class="pn">(</span><span class="st">f"নাম: {loaded['name']}"</span><span class="pn">)</span></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION: COMPLETE PROJECTS ===== -->
+<div class="section" id="s37">
+  <div class="section-card">
+    <div class="section-header sh-crimson">
+      <span class="section-icon">🚀</span>
+      <div>
+        <div class="section-title" style="color:var(--accent6)">সম্পূর্ণ Projects</div>
+        <div style="color:var(--text2);font-size:0.84rem">বাস্তব Python Programs</div>
+      </div>
+      <div class="section-num">37</div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-heading">🎮 Project 1: Number Guessing Game</div>
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot cd1"></div><div class="code-dot cd2"></div><div class="code-dot cd3"></div></div>
+          <span class="code-lang">PYTHON — Number Guessing Game</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="kw">import</span> <span class="va">random</span>
+
+<span class="kw">def</span> <span class="fn">guessing_game</span><span class="pn">():</span>
+    <span class="fn">print</span><span class="pn">(</span><span class="st">"🎮 সংখ্যা অনুমান খেলা!"</span><span class="pn">)</span>
+    <span class="fn">print</span><span class="pn">(</span><span class="st">"আমি 1 থেকে 100 এর মধ্যে একটি সংখ্যা ভেবেছি।"</span><span class="pn">)</span>
+
+    <span class="va">secret</span> <span class="op">=</span> <span class="va">random</span><span class="pn">.</span><span class="fn">randint</span><span class="pn">(</span><span class="nm">1</span><span class="pn">,</span> <span class="nm">100</span><span class="pn">)</span>
+    <span class="va">attempts</span> <span class="op">=</span> <span class="nm">0</span>
+    <span class="va">max_attempts</span> <span class="op">=</span> <span class="nm">7</span>
+
+    <span class="kw">while</span> <span class="va">attempts</span> <span class="op">&lt;</span> <span class="va">max_attempts</span><span class="pn">:</span>
+        <span class="va">attempts</span> <span class="op">+=</span> <span class="nm">1</span>
+        <span class="va">remaining</span> <span class="op">=</span> <span class="va">max_attempts</span> <span class="op">-</span> <span class="va">attempts</span>
+
+        <span class="kw">try</span><span class="pn">:</span>
+            <span class="va">guess</span> <span class="op">=</span> <span class="bi">int</span><span class="pn">(</span><span class="fn">input</span><span class="pn">(</span><span class="st">f"\nঅনুমান #{attempts}: "</span><span class="pn">))</span>
+        <span class="kw">except</span> <span class="cl">ValueError</span><span class="pn">:</span>
+            <span class="fn">print</span><span class="pn">(</span><span class="st">"সংখ্যা দাও!"</span><span class="pn">)</span>
+            <span class="va">attempts</span> <span class="op">-=</span> <span class="nm">1</span>
+            <span class="kw">continue</span>
+
+        <span class="kw">if</span> <span class="va">guess</span> <span class="op">==</span> <span class="va">secret</span><span class="pn">:</span>
+            <span class="fn">print</span><span class="pn">(</span><span class="st">f"🎉 সঠিক! {attempts} চেষ্টায় পেয়েছো!"</span><span class="pn">)</span>
+            <span class="kw">return</span>
+        <span class="kw">elif</span> <span class="va">guess</span> <span class="op">&lt;</span> <span class="va">secret</span><span class="pn">:</span>
+            <span class="fn">print</span><span class="pn">(</span><span class="st">f"⬆️ আরো বড়! ({remaining} চেষ্টা বাকি)"</span><span class="pn">)</span>
+        <span class="kw">else</span><span class="pn">:</span>
+            <span class="fn">print</span><span class="pn">(</span><span class="st">f"⬇️ আরো ছোট! ({remaining} চেষ্টা বাকি)"</span><span class="pn">)</span>
+
+    <span class="fn">print</span><span class="pn">(</span><span class="st">f"😢 শেষ! সংখ্যাটি ছিল {secret}"</span><span class="pn">)</span>
+
+<span class="fn">guessing_game</span><span class="pn">()</span></pre>
+      </div>
+
+      <div class="sub-heading">📚 Project 2: Student Management System</div>
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot cd1"></div><div class="code-dot cd2"></div><div class="code-dot cd3"></div></div>
+          <span class="code-lang">PYTHON — Student Management</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="kw">class</span> <span class="cl">StudentManager</span><span class="pn">:</span>
+    <span class="kw">def</span> <span class="fn">__init__</span><span class="pn">(</span><span class="va">self</span><span class="pn">):</span>
+        <span class="va">self</span><span class="pn">.</span><span class="va">students</span> <span class="op">=</span> <span class="pn">[]</span>
+
+    <span class="kw">def</span> <span class="fn">add_student</span><span class="pn">(</span><span class="va">self</span><span class="pn">,</span> <span class="va">name</span><span class="pn">,</span> <span class="va">roll</span><span class="pn">,</span> <span class="va">marks</span><span class="pn">):</span>
+        <span class="va">student</span> <span class="op">=</span> <span class="pn">{</span>
+            <span class="st">"name"</span><span class="pn">:</span> <span class="va">name</span><span class="pn">,</span>
+            <span class="st">"roll"</span><span class="pn">:</span> <span class="va">roll</span><span class="pn">,</span>
+            <span class="st">"marks"</span><span class="pn">:</span> <span class="va">marks</span><span class="pn">,</span>
+            <span class="st">"grade"</span><span class="pn">:</span> <span class="va">self</span><span class="pn">.</span><span class="fn">get_grade</span><span class="pn">(</span><span class="va">marks</span><span class="pn">)</span>
+        <span class="pn">}</span>
+        <span class="va">self</span><span class="pn">.</span><span class="va">students</span><span class="pn">.</span><span class="fn">append</span><span class="pn">(</span><span class="va">student</span><span class="pn">)</span>
+        <span class="fn">print</span><span class="pn">(</span><span class="st">f"✅ {name} যোগ করা হয়েছে"</span><span class="pn">)</span>
+
+    <span class="kw">def</span> <span class="fn">get_grade</span><span class="pn">(</span><span class="va">self</span><span class="pn">,</span> <span class="va">marks</span><span class="pn">):</span>
+        <span class="kw">if</span> <span class="va">marks</span> <span class="op">&gt;=</span> <span class="nm">90</span><span class="pn">:</span> <span class="kw">return</span> <span class="st">"A+"</span>
+        <span class="kw">elif</span> <span class="va">marks</span> <span class="op">&gt;=</span> <span class="nm">80</span><span class="pn">:</span> <span class="kw">return</span> <span class="st">"A"</span>
+        <span class="kw">elif</span> <span class="va">marks</span> <span class="op">&gt;=</span> <span class="nm">70</span><span class="pn">:</span> <span class="kw">return</span> <span class="st">"B"</span>
+        <span class="kw">elif</span> <span class="va">marks</span> <span class="op">&gt;=</span> <span class="nm">60</span><span class="pn">:</span> <span class="kw">return</span> <span class="st">"C"</span>
+        <span class="kw">elif</span> <span class="va">marks</span> <span class="op">&gt;=</span> <span class="nm">33</span><span class="pn">:</span> <span class="kw">return</span> <span class="st">"D"</span>
+        <span class="kw">else</span><span class="pn">:</span> <span class="kw">return</span> <span class="st">"Fail"</span>
+
+    <span class="kw">def</span> <span class="fn">show_all</span><span class="pn">(</span><span class="va">self</span><span class="pn">):</span>
+        <span class="kw">if</span> <span class="kw">not</span> <span class="va">self</span><span class="pn">.</span><span class="va">students</span><span class="pn">:</span>
+            <span class="fn">print</span><span class="pn">(</span><span class="st">"কোনো শিক্ষার্থী নেই"</span><span class="pn">)</span>
+            <span class="kw">return</span>
+        <span class="fn">print</span><span class="pn">(</span><span class="st">"\n📋 সকল শিক্ষার্থী:"</span><span class="pn">)</span>
+        <span class="fn">print</span><span class="pn">(</span><span class="st">"-"</span><span class="op">*</span><span class="nm">45</span><span class="pn">)</span>
+        <span class="kw">for</span> <span class="va">s</span> <span class="kw">in</span> <span class="va">self</span><span class="pn">.</span><span class="va">students</span><span class="pn">:</span>
+            <span class="fn">print</span><span class="pn">(</span><span class="st">f"Roll:{s['roll']} | {s['name']:15} | নম্বর:{s['marks']} | গ্রেড:{s['grade']}"</span><span class="pn">)</span>
+
+    <span class="kw">def</span> <span class="fn">statistics</span><span class="pn">(</span><span class="va">self</span><span class="pn">):</span>
+        <span class="kw">if</span> <span class="kw">not</span> <span class="va">self</span><span class="pn">.</span><span class="va">students</span><span class="pn">:</span>
+            <span class="kw">return</span>
+        <span class="va">all_marks</span> <span class="op">=</span> <span class="pn">[</span><span class="va">s</span><span class="pn">[</span><span class="st">"marks"</span><span class="pn">]</span> <span class="kw">for</span> <span class="va">s</span> <span class="kw">in</span> <span class="va">self</span><span class="pn">.</span><span class="va">students</span><span class="pn">]</span>
+        <span class="fn">print</span><span class="pn">(</span><span class="st">f"\n📊 পরিসংখ্যান:"</span><span class="pn">)</span>
+        <span class="fn">print</span><span class="pn">(</span><span class="st">f"মোট শিক্ষার্থী: {len(self.students)}"</span><span class="pn">)</span>
+        <span class="fn">print</span><span class="pn">(</span><span class="st">f"সর্বোচ্চ: {max(all_marks)}"</span><span class="pn">)</span>
+        <span class="fn">print</span><span class="pn">(</span><span class="st">f"সর্বনিম্ন: {min(all_marks)}"</span><span class="pn">)</span>
+        <span class="fn">print</span><span class="pn">(</span><span class="st">f"গড়: {sum(all_marks)/len(all_marks):.2f}"</span><span class="pn">)</span>
+
+<span class="cm"># ব্যবহার</span>
+<span class="va">mgr</span> <span class="op">=</span> <span class="cl">StudentManager</span><span class="pn">()</span>
+<span class="va">mgr</span><span class="pn">.</span><span class="fn">add_student</span><span class="pn">(</span><span class="st">"Pavel"</span><span class="pn">,</span> <span class="nm">101</span><span class="pn">,</span> <span class="nm">92</span><span class="pn">)</span>
+<span class="va">mgr</span><span class="pn">.</span><span class="fn">add_student</span><span class="pn">(</span><span class="st">"সাকিব"</span><span class="pn">,</span> <span class="nm">102</span><span class="pn">,</span> <span class="nm">78</span><span class="pn">)</span>
+<span class="va">mgr</span><span class="pn">.</span><span class="fn">add_student</span><span class="pn">(</span><span class="st">"রাকিব"</span><span class="pn">,</span> <span class="nm">103</span><span class="pn">,</span> <span class="nm">55</span><span class="pn">)</span>
+<span class="va">mgr</span><span class="pn">.</span><span class="fn">show_all</span><span class="pn">()</span>
+<span class="va">mgr</span><span class="pn">.</span><span class="fn">statistics</span><span class="pn">()</span></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION: PRACTICE PROBLEMS ===== -->
+<div class="section" id="s38">
+  <div class="section-card">
+    <div class="section-header sh-blue">
+      <span class="section-icon">✏️</span>
+      <div>
+        <div class="section-title" style="color:var(--accent1)">Practice Problems (অনুশীলন)</div>
+        <div style="color:var(--text2);font-size:0.84rem">নিজে চেষ্টা করো — দক্ষতা বাড়বে</div>
+      </div>
+      <div class="section-num">38</div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-heading">🟢 Level 1 — সহজ (Beginner)</div>
+      <div class="practice">
+        <div class="practice-title">📝 এগুলো নিজে সমাধান করো:</div>
+        <ol>
+          <li>দুটি সংখ্যা input নিয়ে বড় সংখ্যা print করো</li>
+          <li>১ থেকে ৫০ পর্যন্ত সকল জোড় সংখ্যার যোগফল বের করো</li>
+          <li>একটি সংখ্যা positive, negative না zero তা বলো</li>
+          <li>যেকোনো সংখ্যার গুণের নামতা print করো</li>
+          <li>একটি string পাল্টা (reverse) করো</li>
+          <li>list থেকে সর্বোচ্চ ও সর্বনিম্ন মান বের করো (built-in ব্যাড়া না ব্যবহার না করে)</li>
+        </ol>
+      </div>
+
+      <div class="sub-heading">🟡 Level 2 — মাঝারি (Intermediate)</div>
+      <div class="practice">
+        <div class="practice-title">📝 একটু কঠিন চ্যালেঞ্জ:</div>
+        <ol>
+          <li>একটি সংখ্যা Prime কিনা পরীক্ষা করো</li>
+          <li>Fibonacci series প্রথম n টি print করো</li>
+          <li>একটি list থেকে duplicate মুছে দাও</li>
+          <li>string-এ vowel (a,e,i,o,u) গণনা করো</li>
+          <li>দুটি list merge করে sort করো</li>
+          <li>একটি সংখ্যা Palindrome কিনা বলো (121, 1221)</li>
+          <li>Dictionary-তে word frequency গণনা করো</li>
+        </ol>
+      </div>
+
+      <div class="sub-heading">🔴 Level 3 — কঠিন (Advanced)</div>
+      <div class="practice">
+        <div class="practice-title">📝 Pro-level চ্যালেঞ্জ:</div>
+        <ol>
+          <li>Stack ও Queue class তৈরি করো</li>
+          <li>Binary Search algorithm implement করো</li>
+          <li>Bubble Sort এবং Quick Sort লিখো</li>
+          <li>Text file থেকে সবচেয়ে বেশি ব্যবহৃত ১০টি word বের করো</li>
+          <li>একটি Bank system তৈরি করো (OOP ব্যবহার করে)</li>
+          <li>Decorator দিয়ে function execution time measure করো</li>
+        </ol>
+      </div>
+
+      <div class="sub-heading">💡 Level 1-এর উত্তর নমুনা</div>
+      <div class="code-wrap">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot cd1"></div><div class="code-dot cd2"></div><div class="code-dot cd3"></div></div>
+          <span class="code-lang">PYTHON — Sample Answers</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><span class="cm"># ১. বড় সংখ্যা খোঁজা</span>
+<span class="va">a</span> <span class="op">=</span> <span class="bi">int</span><span class="pn">(</span><span class="fn">input</span><span class="pn">(</span><span class="st">"প্রথম সংখ্যা: "</span><span class="pn">))</span>
+<span class="va">b</span> <span class="op">=</span> <span class="bi">int</span><span class="pn">(</span><span class="fn">input</span><span class="pn">(</span><span class="st">"দ্বিতীয় সংখ্যা: "</span><span class="pn">))</span>
+<span class="fn">print</span><span class="pn">(</span><span class="st">"বড়:"</span><span class="pn">,</span> <span class="va">a</span> <span class="kw">if</span> <span class="va">a</span> <span class="op">&gt;</span> <span class="va">b</span> <span class="kw">else</span> <span class="va">b</span><span class="pn">)</span>
+
+<span class="cm"># ২. ১ থেকে ৫০ জোড়ের যোগফল</span>
+<span class="va">total</span> <span class="op">=</span> <span class="bi">sum</span><span class="pn">(</span><span class="va">i</span> <span class="kw">for</span> <span class="va">i</span> <span class="kw">in</span> <span class="fn">range</span><span class="pn">(</span><span class="nm">1</span><span class="pn">,</span><span class="nm">51</span><span class="pn">)</span> <span class="kw">if</span> <span class="va">i</span><span class="op">%</span><span class="nm">2</span><span class="op">==</span><span class="nm">0</span><span class="pn">)</span>
+<span class="fn">print</span><span class="pn">(</span><span class="st">"যোগফল:"</span><span class="pn">,</span> <span class="va">total</span><span class="pn">)</span>  <span class="cm"># 650</span>
+
+<span class="cm"># ৩. Positive/Negative/Zero</span>
+<span class="va">n</span> <span class="op">=</span> <span class="bi">int</span><span class="pn">(</span><span class="fn">input</span><span class="pn">(</span><span class="st">"সংখ্যা: "</span><span class="pn">))</span>
+<span class="kw">if</span> <span class="va">n</span> <span class="op">&gt;</span> <span class="nm">0</span><span class="pn">:</span> <span class="fn">print</span><span class="pn">(</span><span class="st">"ধনাত্মক"</span><span class="pn">)</span>
+<span class="kw">elif</span> <span class="va">n</span> <span class="op">&lt;</span> <span class="nm">0</span><span class="pn">:</span> <span class="fn">print</span><span class="pn">(</span><span class="st">"ঋণাত্মক"</span><span class="pn">)</span>
+<span class="kw">else</span><span class="pn">:</span> <span class="fn">print</span><span class="pn">(</span><span class="st">"শূন্য"</span><span class="pn">)</span>
+
+<span class="cm"># ৫. String Reverse</span>
+<span class="va">s</span> <span class="op">=</span> <span class="fn">input</span><span class="pn">(</span><span class="st">"একটি শব্দ: "</span><span class="pn">)</span>
+<span class="fn">print</span><span class="pn">(</span><span class="st">"উল্টো:"</span><span class="pn">,</span> <span class="va">s</span><span class="pn">[::</span><span class="op">-</span><span class="nm">1</span><span class="pn">])</span>
+
+<span class="cm"># Prime number check</span>
+<span class="kw">def</span> <span class="fn">is_prime</span><span class="pn">(</span><span class="va">n</span><span class="pn">):</span>
+    <span class="kw">if</span> <span class="va">n</span> <span class="op">&lt;</span> <span class="nm">2</span><span class="pn">:</span> <span class="kw">return</span> <span class="kw">False</span>
+    <span class="kw">for</span> <span class="va">i</span> <span class="kw">in</span> <span class="fn">range</span><span class="pn">(</span><span class="nm">2</span><span class="pn">,</span> <span class="bi">int</span><span class="pn">(</span><span class="va">n</span><span class="op">**</span><span class="nm">0.5</span><span class="pn">)</span><span class="op">+</span><span class="nm">1</span><span class="pn">):</span>
+        <span class="kw">if</span> <span class="va">n</span> <span class="op">%</span> <span class="va">i</span> <span class="op">==</span> <span class="nm">0</span><span class="pn">:</span>
+            <span class="kw">return</span> <span class="kw">False</span>
+    <span class="kw">return</span> <span class="kw">True</span>
+
+<span class="cm"># ১ থেকে ৫০ পর্যন্ত সকল Prime</span>
+<span class="va">primes</span> <span class="op">=</span> <span class="pn">[</span><span class="va">i</span> <span class="kw">for</span> <span class="va">i</span> <span class="kw">in</span> <span class="fn">range</span><span class="pn">(</span><span class="nm">2</span><span class="pn">,</span><span class="nm">51</span><span class="pn">)</span> <span class="kw">if</span> <span class="fn">is_prime</span><span class="pn">(</span><span class="va">i</span><span class="pn">)]</span>
+<span class="fn">print</span><span class="pn">(</span><span class="st">"Prime সংখ্যা:"</span><span class="pn">,</span> <span class="va">primes</span><span class="pn">)</span></pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SECTION 39+40: CHEAT SHEET ===== -->
+<div class="section" id="s39">
+  <div class="section-card">
+    <div class="section-header sh-gold">
+      <span class="section-icon">📌</span>
+      <div>
+        <div class="section-title" style="color:var(--accent3)">Python Quick Reference — Cheat Sheet</div>
+        <div style="color:var(--text2);font-size:0.84rem">সব গুরুত্বপূর্ণ কমান্ড এক জায়গায়</div>
+      </div>
+      <div class="section-num">40</div>
+    </div>
+    <div class="section-body">
+
+      <div class="sub-heading">🔑 সকল Built-in Functions</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Function</th><th>কাজ</th><th>উদাহরণ</th></tr>
+          <tr><td class="td-code">print()</td><td>স্ক্রিনে দেখানো</td><td class="td-code">print("Hello")</td></tr>
+          <tr><td class="td-code">input()</td><td>ব্যবহারকারী থেকে নেওয়া</td><td class="td-code">input("নাম?")</td></tr>
+          <tr><td class="td-code">int()</td><td>Integer-এ রূপান্তর</td><td class="td-code">int("5") → 5</td></tr>
+          <tr><td class="td-code">float()</td><td>Float-এ রূপান্তর</td><td class="td-code">float("3.14")</td></tr>
+          <tr><td class="td-code">str()</td><td>String-এ রূপান্তর</td><td class="td-code">str(100) → "100"</td></tr>
+          <tr><td class="td-code">len()</td><td>দৈর্ঘ্য/আকার</td><td class="td-code">len([1,2,3]) → 3</td></tr>
+          <tr><td class="td-code">range()</td><td>সংখ্যার পরিসর</td><td class="td-code">range(1,6)</td></tr>
+          <tr><td class="td-code">type()</td><td>data type দেখা</td><td class="td-code">type(5) → int</td></tr>
+          <tr><td class="td-code">max()/min()</td><td>সর্বোচ্চ/সর্বনিম্ন</td><td class="td-code">max([3,1,4])</td></tr>
+          <tr><td class="td-code">sum()</td><td>যোগফল</td><td class="td-code">sum([1,2,3]) → 6</td></tr>
+          <tr><td class="td-code">abs()</td><td>পরম মান</td><td class="td-code">abs(-5) → 5</td></tr>
+          <tr><td class="td-code">round()</td><td>গোলাকার করা</td><td class="td-code">round(3.7) → 4</td></tr>
+          <tr><td class="td-code">sorted()</td><td>সাজানো list ফেরত</td><td class="td-code">sorted([3,1,2])</td></tr>
+          <tr><td class="td-code">enumerate()</td><td>index সহ loop</td><td class="td-code">enumerate(list)</td></tr>
+          <tr><td class="td-code">zip()</td><td>দুটি list একসাথে</td><td class="td-code">zip([1,2],[a,b])</td></tr>
+        </table>
+      </div>
+
+      <div class="sub-heading">📦 List Methods</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Method</th><th>কাজ</th></tr>
+          <tr><td class="td-code">list.append(x)</td><td>শেষে যোগ</td></tr>
+          <tr><td class="td-code">list.insert(i, x)</td><td>position i-তে যোগ</td></tr>
+          <tr><td class="td-code">list.remove(x)</td><td>প্রথম x মুছা</td></tr>
+          <tr><td class="td-code">list.pop(i)</td><td>index i-এর element মুছা ও ফেরত</td></tr>
+          <tr><td class="td-code">list.sort()</td><td>নিজেকে sort করা</td></tr>
+          <tr><td class="td-code">list.reverse()</td><td>উল্টো করা</td></tr>
+          <tr><td class="td-code">list.index(x)</td><td>x-এর index</td></tr>
+          <tr><td class="td-code">list.count(x)</td><td>x কতবার আছে</td></tr>
+          <tr><td class="td-code">list.copy()</td><td>কপি তৈরি</td></tr>
+          <tr><td class="td-code">list.clear()</td><td>সব মুছা</td></tr>
+        </table>
+      </div>
+
+      <div class="sub-heading">📝 String Methods</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>Method</th><th>কাজ</th></tr>
+          <tr><td class="td-code">s.upper()</td><td>বড় হাতে</td></tr>
+          <tr><td class="td-code">s.lower()</td><td>ছোট হাতে</td></tr>
+          <tr><td class="td-code">s.strip()</td><td>দুদিকের space সরানো</td></tr>
+          <tr><td class="td-code">s.split(x)</td><td>x দিয়ে ভাগ করা</td></tr>
+          <tr><td class="td-code">s.join(list)</td><td>list জোড়া লাগানো</td></tr>
+          <tr><td class="td-code">s.replace(a,b)</td><td>a কে b দিয়ে বদলানো</td></tr>
+          <tr><td class="td-code">s.find(x)</td><td>x-এর index</td></tr>
+          <tr><td class="td-code">s.count(x)</td><td>x কতবার আছে</td></tr>
+          <tr><td class="td-code">s.startswith(x)</td><td>x দিয়ে শুরু?</td></tr>
+          <tr><td class="td-code">s.endswith(x)</td><td>x দিয়ে শেষ?</td></tr>
+          <tr><td class="td-code">s.isdigit()</td><td>সব সংখ্যা?</td></tr>
+          <tr><td class="td-code">s.isalpha()</td><td>সব অক্ষর?</td></tr>
+        </table>
+      </div>
+
+      <div class="sub-heading">🗝️ সব Keywords এক নজরে</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin:14px 0">
+        <span class="tag" style="background:rgba(0,212,255,0.1);color:var(--accent1)">False</span>
+        <span class="tag" style="background:rgba(0,212,255,0.1);color:var(--accent1)">True</span>
+        <span class="tag" style="background:rgba(0,212,255,0.1);color:var(--accent1)">None</span>
+        <span class="tag" style="background:rgba(199,125,255,0.1);color:var(--accent5)">and</span>
+        <span class="tag" style="background:rgba(199,125,255,0.1);color:var(--accent5)">or</span>
+        <span class="tag" style="background:rgba(199,125,255,0.1);color:var(--accent5)">not</span>
+        <span class="tag" style="background:rgba(107,203,119,0.1);color:var(--accent4)">if</span>
+        <span class="tag" style="background:rgba(107,203,119,0.1);color:var(--accent4)">elif</span>
+        <span class="tag" style="background:rgba(107,203,119,0.1);color:var(--accent4)">else</span>
+        <span class="tag" style="background:rgba(255,217,61,0.1);color:var(--accent3)">for</span>
+        <span class="tag" style="background:rgba(255,217,61,0.1);color:var(--accent3)">while</span>
+        <span class="tag" style="background:rgba(255,217,61,0.1);color:var(--accent3)">break</span>
+        <span class="tag" style="background:rgba(255,217,61,0.1);color:var(--accent3)">continue</span>
+        <span class="tag" style="background:rgba(255,107,107,0.1);color:var(--accent2)">def</span>
+        <span class="tag" style="background:rgba(255,107,107,0.1);color:var(--accent2)">return</span>
+        <span class="tag" style="background:rgba(255,107,107,0.1);color:var(--accent2)">yield</span>
+        <span class="tag" style="background:rgba(255,154,60,0.1);color:var(--accent6)">class</span>
+        <span class="tag" style="background:rgba(255,154,60,0.1);color:var(--accent6)">import</span>
+        <span class="tag" style="background:rgba(255,154,60,0.1);color:var(--accent6)">from</span>
+        <span class="tag" style="background:rgba(255,154,60,0.1);color:var(--accent6)">as</span>
+        <span class="tag" style="background:rgba(0,212,255,0.1);color:var(--accent1)">try</span>
+        <span class="tag" style="background:rgba(0,212,255,0.1);color:var(--accent1)">except</span>
+        <span class="tag" style="background:rgba(0,212,255,0.1);color:var(--accent1)">finally</span>
+        <span class="tag" style="background:rgba(0,212,255,0.1);color:var(--accent1)">raise</span>
+        <span class="tag" style="background:rgba(199,125,255,0.1);color:var(--accent5)">with</span>
+        <span class="tag" style="background:rgba(199,125,255,0.1);color:var(--accent5)">lambda</span>
+        <span class="tag" style="background:rgba(199,125,255,0.1);color:var(--accent5)">global</span>
+        <span class="tag" style="background:rgba(199,125,255,0.1);color:var(--accent5)">nonlocal</span>
+        <span class="tag" style="background:rgba(107,203,119,0.1);color:var(--accent4)">in</span>
+        <span class="tag" style="background:rgba(107,203,119,0.1);color:var(--accent4)">is</span>
+        <span class="tag" style="background:rgba(107,203,119,0.1);color:var(--accent4)">del</span>
+        <span class="tag" style="background:rgba(107,203,119,0.1);color:var(--accent4)">pass</span>
+        <span class="tag" style="background:rgba(107,203,119,0.1);color:var(--accent4)">assert</span>
+      </div>
+
+      <!-- FINAL MESSAGE -->
+      <div style="margin-top:30px;padding:24px;background:linear-gradient(135deg,rgba(107,203,119,0.08),rgba(0,212,255,0.08));border-radius:20px;border:1px solid rgba(107,203,119,0.2);text-align:center">
+        <div style="font-size:2.5rem;margin-bottom:10px">🏆</div>
+        <div style="font-size:1.2rem;font-weight:800;background:linear-gradient(135deg,var(--accent4),var(--accent1));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px">অভিনন্দন  🎉</div>
+        <div style="color:var(--text2);font-size:0.93rem;max-width:500px;margin:0 auto;line-height:1.8">
+          তুমি Python-এর Part 1 ও Part 2 সম্পন্ন করেছো। এখন প্রতিদিন একটি করে Project বানাও।
+          মনে রাখো — <strong style="color:var(--accent4)">Practice Makes Perfect!</strong>
+          <br><br>পরবর্তী ধাপ: <strong style="color:var(--accent1)">NumPy → Pandas → Flask → Machine Learning</strong>
+        </div>
+        <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
+          <span class="tag" style="background:rgba(107,203,119,0.15);color:var(--accent4);font-size:0.85rem">✅ Variables ও Data Types</span>
+          <span class="tag" style="background:rgba(107,203,119,0.15);color:var(--accent4);font-size:0.85rem">✅ Control Flow</span>
+          <span class="tag" style="background:rgba(107,203,119,0.15);color:var(--accent4);font-size:0.85rem">✅ Functions & OOP</span>
+          <span class="tag" style="background:rgba(107,203,119,0.15);color:var(--accent4);font-size:0.85rem">✅ Advanced Python</span>
+          <span class="tag" style="background:rgba(107,203,119,0.15);color:var(--accent4);font-size:0.85rem">✅ Projects & Practice</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <div style="font-size:1.5rem;margin-bottom:10px">🐍</div>
+  <p>তৈরি করেছেন <strong>Pavel</strong> CSEian and Python Enthusiast and ai Developer</p>
+  <p style="margin-top:6px">Part 2 | Advanced Python Reference Guide | সম্পূর্ণ বাংলায়</p>
+  <p style="margin-top:10px;opacity:0.5">Happy Coding! 🚀 থামো না, শিখতে থাকো!</p>
+</footer>
+
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// Stars
+const sc = document.getElementById('stars');
+for(let i=0;i<120;i++){
+  const s=document.createElement('div');
+  s.className='star';
+  const sz=Math.random()*2.5+0.5;
+  s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-duration:${Math.random()*4+2}s;animation-delay:${Math.random()*4}s;`;
+  sc.appendChild(s);
+}
+
+// Progress
+const pb=document.getElementById('progress-bar');
+const stb=document.getElementById('scroll-top');
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.documentElement.scrollHeight-window.innerHeight)*100;
+  pb.style.width=p+'%';
+  stb.classList.toggle('show',window.scrollY>300);
+});
+
+// Copy
+function copyCode(btn){
+  const text=btn.closest('.code-wrap').querySelector('pre').innerText;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='✅ Copied!';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied');},2000);
+  });
+}
+
+// Scroll animation
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.style.animationPlayState='running';}});
+},{threshold:0.08});
+document.querySelectorAll('.section').forEach(s=>{
+  s.style.animationPlayState='paused';obs.observe(s);
+});
+</script>
+</body>
+</html>
